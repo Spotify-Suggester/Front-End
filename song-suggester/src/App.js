@@ -3,14 +3,14 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Login from './components/Login';
 import PrivateRoute from './components/PrivateRoute';
-import Favorites from './components/Favorites';
+import FavoritesPage from './components/FavoritesPage';
 
 function App() {
   return (
     <Router>
       <h1>Spotify Song Suggester</h1>
       <Route exact path='/' component={Login} />
-      <Route path='/favorites' component={Favorites} />
+      <Route path='/favorites' component={FavoritesPage} />
       {/* '/favorites' will become a PrivateRoute */}
     </Router>
   );

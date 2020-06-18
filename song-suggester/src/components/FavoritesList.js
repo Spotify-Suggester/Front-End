@@ -1,4 +1,4 @@
-// List of user's favorite songs
+// will iterate through array of user's favorite songs and renders each Favorite
 import React from 'react';
 
 const FavoritesList = () => {
