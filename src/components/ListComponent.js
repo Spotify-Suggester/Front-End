@@ -66,11 +66,11 @@ function ListComponent() {
           {rows.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component='th' scope='row'>
-                <button
-                  onClick={() => setFavorites([...favorites, results[0]])}
-                >
-                  add
-                </button>
+                <span onClick={() => setFavorites([...favorites, results[0]])}>
+                  <PlusSign 
+                    color="#ff6584"
+                  />
+                </span>
               </StyledTableCell>
               <StyledTableCell component='th' scope='row'>
                 {row.name}
