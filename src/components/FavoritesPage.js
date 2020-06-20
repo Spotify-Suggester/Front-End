@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
 import FavoritesList from './FavoritesList';
-import FavoritesForm from './FavoritesForm';
+import SearchForm from './SearchForm';
 import SuggestionForm from './SuggestionForm';
 import SearchResults from './SearchResults';
 
 import { data } from '../data';
+import GenreListSearch from './GenreListSearch';
 
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
@@ -14,9 +15,10 @@ const FavoritesPage = () => {
   return (
     <FavoritesContext.Provider value={{ favorites, setFavorites, results }}>
       <FavoritesList />
-      <FavoritesForm />
+      <SearchForm />
       <SuggestionForm />
       <SearchResults />
+      <GenreListSearch />
     </FavoritesContext.Provider>
   );
 };
