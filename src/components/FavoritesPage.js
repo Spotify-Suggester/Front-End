@@ -4,6 +4,7 @@ import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
 import SuggestionForm from './SuggestionForm';
 import SearchResults from './SearchResults';
+import ListComponent from './ListComponent';
 
 import { data } from '../data';
 import GenreListSearch from './GenreListSearch';
@@ -16,8 +17,8 @@ const FavoritesPage = () => {
     <FavoritesContext.Provider value={{ favorites, setFavorites, results }}>
       <FavoritesList />
       <SearchForm />
+      <ListComponent />
       <SuggestionForm />
-      <SearchResults />
       <GenreListSearch />
     </FavoritesContext.Provider>
   );
