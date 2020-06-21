@@ -17,8 +17,6 @@ const LoginForm = (props) => {
     password: "",
   });
 
-  const [user, setUser] = useState([]);
-
   const [serverError, setServerError] = useState("");
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -63,13 +61,12 @@ const LoginForm = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post(
-        "https://spotify-suggester1.herokuapp.com/api/auth/login",
-        loginData
-      )
+      .post("https://spotify-suggester1.herokuapp.com/api/auth/login", {
+        username: loginData.username,
+        password: loginData.password,
+      })
       .then((response) => {
         console.log("response from login", response);
-        setUser([...user, response.data]);
 
         setLoginData({
           username: "",
@@ -104,7 +101,7 @@ const LoginForm = (props) => {
           label="Password"
           type="password"
           autoComplete="current-password"
-          value={loginData.pasword}
+          value={loginData.password}
           onChange={handleChange}
           fullWidth
         />

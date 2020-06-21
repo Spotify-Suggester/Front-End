@@ -15,13 +15,11 @@ const formSchema = Yup.object().shape({
 });
 
 const RegisterForm = (props) => {
-  const [registerData, setRegisterData] = useState([
-    {
-      username: "",
-      password: "",
-      confirmPassword: "",
-    },
-  ]);
+  const [registerData, setRegisterData] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const [serverError, setServerError] = useState("");
 
@@ -67,23 +65,25 @@ const RegisterForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // axios
-    //   .post(
-    //     "https://spotify-suggester1.herokuapp.com/api/auth/register",
-    //     registerData
-    //   )
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     setRegisterData({
-    //       username: "",
-    //       password: "",
-    //       confirmPassword: "",
-    //     });
-    //     setServerError(null);
-    //   })
-    //   .catch((err) => {
-    //     setServerError("oops! something's not right!");
-    //   });
+    axios
+      .post("https://spotify-suggester1.herokuapp.com/api/auth/register", {
+        username: registerData.username,
+        password: registerData.password,
+      })
+      .then((response) => {
+        console.log(response.data);
+
+        setRegisterData({
+          username: "",
+          password: "",
+          confirmPassword: "",
+        });
+
+        setServerError(null);
+      })
+      .catch((err) => {
+        setServerError("oops! something's not right!");
+      });
   };
 
   return (
@@ -98,6 +98,7 @@ const RegisterForm = (props) => {
           onChange={handleChange}
           fullWidth
         />
+
         {errors.username > 0 ? <p>{errors.username}</p> : null}
       </Box>
       <Box mt={2} color="text.primary">
@@ -107,7 +108,7 @@ const RegisterForm = (props) => {
           label="Password"
           type="password"
           autoComplete="current-password"
-          value={registerData.pasword}
+          value={registerData.password}
           onChange={handleChange}
           fullWidth
         />
