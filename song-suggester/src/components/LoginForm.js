@@ -17,6 +17,8 @@ const LoginForm = (props) => {
     password: "",
   });
 
+  const [user, setUser] = useState([]);
+
   const [serverError, setServerError] = useState("");
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -60,22 +62,25 @@ const LoginForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // axios
-    //   .post(
-    //     "https://spotify-suggester1.herokuapp.com/api/auth/login",
-    //     loginData
-    //   )
-    //   .then((response) => {
-    //     console.log("response from login", response);
-    //     setLoginData({
-    //       username: "",
-    //       password: "",
-    //     });
-    //     setServerError(null);
-    //   })
-    //   .catch((err) => {
-    //     setServerError("oops! something's not right!");
-    //   });
+    axios
+      .post(
+        "https://spotify-suggester1.herokuapp.com/api/auth/login",
+        loginData
+      )
+      .then((response) => {
+        console.log("response from login", response);
+        setUser([...user, response.data]);
+
+        setLoginData({
+          username: "",
+          password: "",
+        });
+
+        setServerError(null);
+      })
+      .catch((err) => {
+        setServerError("oops! something's not right!");
+      });
   };
 
   return (
