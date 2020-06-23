@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from "react";
 import * as Yup from "yup";
 import axios from "axios";
+import {useHistory} from "react-router-dom";
 import {TextField, Box, Button, Divider, Grid} from "@material-ui/core";
 
 const formSchema = Yup.object().shape({
@@ -12,6 +13,8 @@ const formSchema = Yup.object().shape({
 });
 
 const LoginForm = (props) => {
+  const history = useHistory();
+
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
@@ -74,6 +77,8 @@ const LoginForm = (props) => {
         });
 
         setServerError(null);
+
+        history.push("/Favorites");
       })
       .catch((err) => {
         setServerError("oops! something's not right!");
