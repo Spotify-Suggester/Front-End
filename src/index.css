@@ -15,25 +15,3 @@ body {
   color: white;
   font-family: 'Raleway', sans-serif !important;
 }
-
-/* code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-body .fas {
-  font-family: 'Font Awesome 5 Free' !important;
-}
-
-.container {
-  width: 700px;
-  margin: auto;
-}
-
-
-.selection-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
