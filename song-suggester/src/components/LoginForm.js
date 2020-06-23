@@ -60,7 +60,7 @@ const LoginForm = (props) => {
     });
     validateChange(event);
   };
-
+  // I will create a function the will handle both login and register submit.
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
