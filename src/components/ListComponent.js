@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { FavoritesContext } from '../context/FavoritesContext';
+import { FavoritesContext } from '../contexts/FavoritesContext';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -67,9 +67,7 @@ function ListComponent() {
             <StyledTableRow key={row.name}>
               <StyledTableCell component='th' scope='row'>
                 <span onClick={() => setFavorites([...favorites, results[0]])}>
-                  <PlusSign 
-                    color="#ff6584"
-                  />
+                  <PlusSign color='#ff6584' />
                 </span>
               </StyledTableCell>
               <StyledTableCell component='th' scope='row'>
