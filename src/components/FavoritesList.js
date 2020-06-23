@@ -1,6 +1,6 @@
 // will iterate through array of user's favorite songs and render each Favorite
 import React, { useContext } from 'react';
-import { FavoritesContext } from '../context/FavoritesContext';
+import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const FavoritesList = () => {
   const { favorites, setFavorites } = useContext(FavoritesContext);

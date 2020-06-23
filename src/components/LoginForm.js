@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import axios from 'axios';
-// import {useHistory} from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import { TextField, Box, Button, Divider, Grid } from '@material-ui/core';
 
 const formSchema = Yup.object().shape({
@@ -13,7 +13,7 @@ const formSchema = Yup.object().shape({
 });
 
 const LoginForm = (props) => {
-  // const history = useHistory();
+  const history = useHistory();
 
   const [loginData, setLoginData] = useState({
     username: '',
@@ -69,7 +69,11 @@ const LoginForm = (props) => {
         password: loginData.password
       })
       .then((response) => {
-        console.log('response from login', response);
+        localStorage.setItem('token', response.data.auth.token);
+        localStorage.setItem(
+          'access_token',
+          response.data.spotify.access_token
+        );
 
         setLoginData({
           username: '',
@@ -78,7 +82,7 @@ const LoginForm = (props) => {
 
         setServerError(null);
 
-        props.history.push('/favorites');
+        history.push('/favorites');
       })
       .catch((err) => {
         setServerError("oops! something's not right!");
