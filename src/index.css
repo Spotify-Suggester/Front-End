@@ -16,19 +16,18 @@ body {
   font-family: 'Raleway', sans-serif !important;
 }
 
-code {
+/* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
 body .fas {
-  font-family: "Font Awesome 5 Free" !important;
+  font-family: 'Font Awesome 5 Free' !important;
 }
 
 .container {
   width: 700px;
   margin: auto;
-
 }
 
 .container form {
@@ -37,12 +36,11 @@ body .fas {
 }
 
 .container form button {
-  background-color: #6C63FF;
-
+  background-color: #6c63ff;
 }
 
 .container form button:hover {
-  background-color: #4b45b1
+  background-color: #4b45b1;
 }
 
 .container form .MuiFormControl-fullWidth {
@@ -54,16 +52,15 @@ body .fas {
   color: white;
 }
 .container form .Mui-focused {
-  color: #6C63FF !important;
+  color: #6c63ff !important;
 }
 
 .MuiInput-underline:after {
-  border-bottom: 2px solid #6C63FF !important;
+  border-bottom: 2px solid #6c63ff !important;
 }
 .MuiInput-underline:before {
   border-bottom: 1px solid white !important;
 }
-
 
 .selection-list {
   display: flex;
@@ -81,9 +78,9 @@ body .fas {
   height: 130px;
   margin: 5px 0 15px 0;
   color: #111;
-  border: 2px solid #FF6584;
+  border: 2px solid #ff6584;
 }
 .selection-list button span {
   font-size: 1.2rem;
   font-weight: 600;
-}
+} */
