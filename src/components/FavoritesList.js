@@ -1,31 +1,47 @@
 // will iterate through array of user's favorite songs and render each Favorite
 import React, { useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
+import Container from '@material-ui/core/Container';
+import {makeStyles} from "@material-ui/core/styles";
+import ListComponent from "./ListComponent"
+import Button from '@material-ui/core/Button';
+import zIndex from '@material-ui/core/styles/zIndex';
 
+
+const useStyles = makeStyles(() => ({
+  container: {
+    width: "450px",
+    margin: "0",
+    borderRight: "1px solid #6c63FF",
+    background: "rgba(0,0,0,.45)",
+    position: "fixed",
+    zIndex: "100",
+    height: "100vh",
+    "& .MuiButton-contained": {
+      backgroundColor: "#6C63FF",
+      color: "white",
+      width: "calc(100% - 48px)",
+      position: "absolute",
+      bottom: "30px"
+    },
+  },
+  header: {
+    textAlign: "center"
+  }
+}))
 const FavoritesList = () => {
+  const classes = useStyles()
+  
   const { favorites, setFavorites } = useContext(FavoritesContext);
-  return favorites.length === 0 ? (
-    <h3>Choose some favorites</h3>
-  ) : (
-    <>
-      <h3>FavoritesList</h3>
-      {favorites.map((favorite) => {
-        return (
-          <div key={favorite.id}>
-            <h4>{favorite.name}</h4>
-            <p>Artist: {favorite.artists[0].name}</p>
-            <p>Album: {favorite.album.name}</p>
-            <button
-              onClick={() =>
-                setFavorites(favorites.filter((item) => item.id != favorite.id))
-              }
-            >
-              remove
-            </button>
-          </div>
-        );
-      })}
-    </>
+  return (
+    <Container className={classes.container}>
+      <h2 className={classes.header}>Favorite Songs</h2>
+      <ListComponent type="favorite"/>
+      <Button  variant='contained' size="large">
+        Suggest Songs
+      </Button>
+    </Container>
+    
   );
 };
 

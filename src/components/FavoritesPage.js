@@ -6,22 +6,46 @@ import SuggestionForm from './SuggestionForm';
 import SearchResults from './SearchResults';
 import ListComponent from './ListComponent';
 import RadarChart from './RadarChart'
+import Container from '@material-ui/core/Container';
+import {makeStyles} from "@material-ui/core/styles";
 
 import { data } from '../data';
 import GenreListSearch from './GenreListSearch';
 
+const useStyles = makeStyles(() => ({
+ container: {
+   display: "flex",
+   margin: "0",
+   padding: "0"
+ },
+ emptyContainer:{
+   width: "450px",
+   margin: "0"
+ },
+ 
+}))
+
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
   const [results, setResults] = useState(data);
+  const classes = useStyles()
 
   return (
     <FavoritesContext.Provider value={{ favorites, setFavorites, results }}>
-      <FavoritesList />
-      <SearchForm />
-      <ListComponent />
-      <SuggestionForm />
-      <GenreListSearch />
-      <RadarChart />
+      <Container className={classes.container} maxWidth="full">
+        <FavoritesList />
+        <Container className={classes.emptyContainer}/>
+        <Container>
+          <SearchForm />
+          <ListComponent />
+          <SuggestionForm />
+          <RadarChart />
+          <GenreListSearch />
+          <RadarChart />
+        </Container>
+      </Container>
+      
+      
     </FavoritesContext.Provider>
   );
 };
