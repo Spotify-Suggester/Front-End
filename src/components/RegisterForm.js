@@ -1,44 +1,41 @@
-import React, {useState, useEffect} from "react";
-import * as Yup from "yup";
-import axios from "axios";
-import {useHistory} from "react-router-dom";
-import {TextField, Box, Button, Divider, Grid} from "@material-ui/core";
+import React, { useState, useEffect, useContext } from 'react';
+import * as Yup from 'yup';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+import { TextField, Box, Button, Divider, Grid } from '@material-ui/core';
+import { UserContext } from '../contexts/UserContext';
 
 const formSchema = Yup.object().shape({
   username: Yup.string()
-    .min(3, "Username should be at least 3 characters")
-    .required("Username is a required field"),
-  password: Yup.string().required("Password is a required field"),
+    .min(3, 'Username should be at least 3 characters')
+    .required('Username is a required field'),
+  password: Yup.string().required('Password is a required field'),
   confirmPassword: Yup.string().oneOf(
-    [Yup.ref("password"), null],
-    "Passwords must match"
-  ),
+    [Yup.ref('password'), null],
+    'Passwords must match'
+  )
 });
 
 const RegisterForm = (props) => {
   const history = useHistory();
 
-  const [registerData, setRegisterData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const { loginData, setLoginData, setUserId } = useContext(UserContext);
 
-  const [serverError, setServerError] = useState("");
+  const [serverError, setServerError] = useState('');
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   const [errors, setErrors] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
+    username: '',
+    password: '',
+    confirmPassword: ''
   });
 
   useEffect(() => {
-    formSchema.isValid(registerData).then((valid) => {
+    formSchema.isValid(loginData).then((valid) => {
       setButtonDisabled(!valid);
     });
-  }, [registerData]);
+  }, [loginData]);
 
   const validateChange = (event) => {
     Yup.reach(formSchema, event.target.name)
@@ -46,22 +43,22 @@ const RegisterForm = (props) => {
       .then((valid) => {
         setErrors({
           ...errors,
-          [event.target.name]: "",
+          [event.target.name]: ''
         });
       })
       .catch((err) => {
         setErrors({
           ...errors,
-          [event.target.name]: err.errors[0],
+          [event.target.name]: err.errors[0]
         });
       });
   };
 
   const handleChange = (event) => {
     event.persist();
-    setRegisterData({
-      ...registerData,
-      [event.target.name]: event.target.value,
+    setLoginData({
+      ...loginData,
+      [event.target.name]: event.target.value
     });
     validateChange(event);
   };
@@ -69,64 +66,80 @@ const RegisterForm = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post("https://spotify-suggester1.herokuapp.com/api/auth/register", {
-        username: registerData.username,
-        password: registerData.password,
+      .post('https://spotify-suggester1.herokuapp.com/api/auth/register', {
+        username: loginData.username,
+        password: loginData.password
       })
       .then((response) => {
-        console.log(response.data);
-
-        setRegisterData({
-          username: "",
-          password: "",
-          confirmPassword: "",
-        });
-
-        setServerError(null);
-
-        history.push("/Favorites");
+        console.log('new user created', response.data);
       })
       .catch((err) => {
         setServerError("oops! something's not right!");
       });
+
+    axios
+      .post('https://spotify-suggester1.herokuapp.com/api/auth/login', {
+        username: loginData.username,
+        password: loginData.password
+      })
+      .then((response) => {
+        console.log('response', response);
+        setUserId(response.data.auth.id);
+        localStorage.setItem('token', response.data.auth.token);
+        localStorage.setItem(
+          'access_token',
+          response.data.spotify.access_token
+        );
+
+        setLoginData({
+          username: '',
+          password: '',
+          confirmPassword: ''
+        });
+
+        setServerError(null);
+
+        history.push('/favorites');
+      })
+      .catch();
   };
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit}>
+    <form autoComplete='off' onSubmit={handleSubmit}>
       <h3>Create Account</h3>
       <Box mt={2}>
         <TextField
-          id="username"
-          name="username"
-          label="Username"
-          value={registerData.username}
+          id='username'
+          name='username'
+          label='Username'
+          value={loginData.username}
           onChange={handleChange}
           fullWidth
         />
 
         {errors.username > 0 ? <p>{errors.username}</p> : null}
       </Box>
-      <Box mt={2} color="text.primary">
+      <Box mt={2} color='text.primary'>
         <TextField
-          id="password"
-          name="password"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          value={registerData.password}
+          id='password'
+          name='password'
+          label='Password'
+          type='password'
+          autoComplete='current-password'
+          value={loginData.password}
           onChange={handleChange}
           fullWidth
         />
         {errors.password.length > 0 ? <p>{errors.password}</p> : null}
       </Box>
-      <Box mt={2} color="text.primary">
+      <Box mt={2} color='text.primary'>
         <TextField
-          id="confirmPassword"
-          name="confirmPassword"
-          label="Confirm Password"
-          type="password"
-          autoComplete="current-password"
-          value={registerData.confirmPassword}
+          id='confirmPassword'
+          name='confirmPassword'
+          label='Confirm Password'
+          type='password'
+          autoComplete='current-password'
+          value={loginData.confirmPassword}
           onChange={handleChange}
           fullWidth
         />
@@ -136,17 +149,17 @@ const RegisterForm = (props) => {
       </Box>
       <Box mt={6} mb={5}>
         <Button
-          variant="contained"
-          type="submit"
-          size="large"
+          variant='contained'
+          type='submit'
+          size='large'
           fullWidth
           disabled={buttonDisabled}
         >
           Create An Account
         </Button>
       </Box>
-      <Box textAlign="center">
-        <Grid container alignItems="center">
+      <Box textAlign='center'>
+        <Grid container alignItems='center'>
           <Grid item xs={5}>
             <Divider />
           </Grid>
@@ -160,9 +173,9 @@ const RegisterForm = (props) => {
       </Box>
       <Box mt={5}>
         <Button
-          variant="contained"
-          size="large"
-          style={{backgroundColor: "#FF6584", color: "black"}}
+          variant='contained'
+          size='large'
+          style={{ backgroundColor: '#FF6584', color: 'black' }}
           fullWidth
           onClick={props.formSwitch}
         >

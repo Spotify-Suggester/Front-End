@@ -8,8 +8,6 @@ function CustomCheckbox(props) {
 
   const useStyle = makeStyles(() => ({
     button: {
-      
-      fontSize: "4rem",
       width: "22%",
       height: "130px",
       margin: "5px 0 15px 0",
