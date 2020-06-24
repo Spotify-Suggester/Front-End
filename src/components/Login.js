@@ -4,6 +4,7 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import {Container, Grid, Box} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import Logo from "../svg/Logo"
 
 const useStyles = makeStyles(() => ({
   gridPosition: {
@@ -13,8 +14,7 @@ const useStyles = makeStyles(() => ({
   },
   hero: {
     position: "relative",
-    backgroundImage:
-      "url(https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)",
+    backgroundImage: "linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3)), url(https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)",
     backgroundSize: "cover",
     backgroundPosition: "center",
     minHeight: "20rem",
@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
     },
 
     "& .MuiInput-underline:before": {
-      borderBottomColor: "rgba(255, 255, 255, 0.7) !important;",
+      borderBottomColor: "rgba(255, 255, 255, 0.3) !important;",
     },
 
     "& .MuiFormLabel-root.Mui-focused": {
@@ -65,9 +65,8 @@ const useStyles = makeStyles(() => ({
     },
 
     "& .MuiDivider-root": {
-      backgroundColor: "rgba(255,255,255,0.7)",
+      backgroundColor: "rgba(255,255,255,0.3)",
     },
-
     "& p": {
       backgroundColor: "#020215",
       color: "#FF6584",
@@ -75,6 +74,13 @@ const useStyles = makeStyles(() => ({
       fontSize: 14,
     },
   },
+  svg: {
+    position: "absolute",
+    width: "130px",
+    top: "30%",
+    left: "50%",
+    transform: "translate(-50%, 0)"
+  }
 }));
 
 const Login = () => {
@@ -97,6 +103,7 @@ const Login = () => {
     <Container maxWidth={false}>
       <Grid container className={classes.gridPosition}>
         <Grid item xs={12} md={6} className={classes.hero}>
+          <Logo className={classes.svg}/>
           <h1 className={classes.brandTitle}>Spotify Suggester</h1>
         </Grid>
         <Grid item xs={12} md={6} className={classes.formContainer}>
