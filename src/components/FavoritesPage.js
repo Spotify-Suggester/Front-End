@@ -8,6 +8,8 @@ import SuggestionForm from './SuggestionForm';
 import SearchResults from './SearchResults';
 import ListComponent from './ListComponent';
 import RadarChart from './RadarChart';
+import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {
   axiosWithUserAuth,
@@ -21,6 +23,17 @@ import GenreListSearch from './GenreListSearch';
 //   .get('https://api.spotify.com/v1/search?q=tania%20bowra&type=artist')
 //   .then((res) => console.log(res.data))
 //   .catch((err) => console.log(err.message));
+const useStyles = makeStyles(() => ({
+  container: {
+    display: 'flex',
+    margin: '0',
+    padding: '0'
+  },
+  emptyContainer: {
+    width: '450px',
+    margin: '0'
+  }
+}));
 
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
@@ -36,15 +49,24 @@ const FavoritesPage = () => {
       .then((response) => console.log('response', response))
       .catch((err) => console.error('err', err.response));
   }, []);
+  const classes = useStyles();
 
   return (
-    <FavoritesContext.Provider value={{ favorites, setFavorites, results }}>
-      <FavoritesList />
-      <SearchForm />
-      <ListComponent />
-      <SuggestionForm />
-      <GenreListSearch />
-      <RadarChart />
+    <FavoritesContext.Provider
+      value={{ favorites, setFavorites, results, setResults }}
+    >
+      <Container className={classes.container} maxWidth='full'>
+        <FavoritesList />
+        <Container className={classes.emptyContainer} />
+        <Container>
+          <SearchForm />
+          <ListComponent />
+          <SuggestionForm />
+          <RadarChart />
+          <GenreListSearch />
+          <RadarChart />
+        </Container>
+      </Container>
     </FavoritesContext.Provider>
   );
 };

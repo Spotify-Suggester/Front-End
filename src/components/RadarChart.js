@@ -7,22 +7,53 @@ const RadarChart = () => {
         options: {
           chart: {
             id: "basic-bar",
-            background: "white"
+            background: "transparent",
+            toolbar: {
+              show: false
+            }
           },
+          colors: ["#6c63ff", "#ff6584"],
           fill: {
-            opacity: 0.7
+            opacity: 0.7,
+            colors: ["#6c63ff", "#ff6584"]
+          },
+          stroke: {
+            colors: ["#6c63ff", "#ff6584"]
+          },
+          markers: {
+            size: 0
+          },
+          plotOptions: {
+            radar: {
+              polygons: {
+                strokeColor: '#333333',
+                fill: {
+                    colors: ['transparent', 'transparent']
+                }
+              }
+            }
           },
           xaxis: {
-            categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+            categories: ["danceability", "energy", "mode", "speechiness", "instrumentalness", "liveness", "valence"],
           },
-          grid: {
-            borderColor: '#000000'
+          yaxis: {
+            show: false
+          },
+          legend: {
+            labels: {
+              colors: ["white"],
+              useSeriesColors: true
+            }
           }
         },
         series: [
           {
-            name: "series-1",
-            data: [30, 40, 45, 50, 49, 60, 70, 91]
+            name: "Actual Song",
+            data: [.1, .4, .45, .50, .49, .60, .70]
+          },
+          {
+            name: "Suggestion Average",
+            data: [.10, .50, .22, .11, .70, .90, .30]
           }
         ]
       };
@@ -31,7 +62,7 @@ const RadarChart = () => {
               options={chartConfig.options}
               series={chartConfig.series}
               type="radar"
-              width="500"
+              width="700"
             />
     )
 }
