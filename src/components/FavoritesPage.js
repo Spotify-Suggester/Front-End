@@ -5,7 +5,7 @@ import { FavoritesContext } from '../contexts/FavoritesContext';
 import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
 import SuggestionForm from './SuggestionForm';
-import SearchResults from './SearchResults';
+import NavigationBar from './NavigationBar';
 import ListComponent from './ListComponent';
 import RadarChart from './RadarChart';
 import Container from '@material-ui/core/Container';
@@ -27,10 +27,12 @@ const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
     margin: '0',
-    padding: '0'
+    padding: '0',
+    paddingTop: '64px'
   },
   emptyContainer: {
     width: '450px',
+    minWidth: '450px',
     margin: '0'
   }
 }));
@@ -52,10 +54,9 @@ const FavoritesPage = () => {
   const classes = useStyles();
 
   return (
-    <FavoritesContext.Provider
-      value={{ favorites, setFavorites, results, setResults }}
-    >
+    <FavoritesContext.Provider value={{ favorites, setFavorites, results }}>
       <Container className={classes.container} maxWidth='full'>
+        <NavigationBar />
         <FavoritesList />
         <Container className={classes.emptyContainer} />
         <Container>

@@ -116,7 +116,7 @@ const SearchForm = () => {
           <TextField
             name='search-bar'
             id='search-bar'
-            label='Search your favorites songs'
+            label='Search for your favorite songs'
             fullWidth
             onChange={inputChange}
             value={searchTerm}

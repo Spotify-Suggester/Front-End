@@ -40,7 +40,7 @@ function createData(id, name, artist, year) {
 
 const useStyle = makeStyles(() => ({
   container: {
-    maxHeight: '80vh',
+    maxHeight: '75vh',
     '&::-webkit-scrollbar': {
       width: '10px'
     },
@@ -96,7 +96,10 @@ function ListComponent(props) {
               <StyledTableCell component='th' scope='row'>
                 {props.type !== 'favorite' ? (
                   <span
-                    onClick={() => setFavorites([...favorites, results[index]])}
+                    onClick={() => {
+                      if (!favorites.includes(results[index]))
+                        setFavorites([...favorites, results[index]]);
+                    }}
                   >
                     <PlusSign color='#ff6584' />
                   </span>
