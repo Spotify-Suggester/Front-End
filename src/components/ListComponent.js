@@ -96,7 +96,10 @@ function ListComponent(props) {
               <StyledTableCell component="th" scope="row">
                 {props.type !== "favorite" ? (
                   <span
-                    onClick={() => setFavorites([...favorites, results[index]])}
+                    onClick={() => {
+                      if (!favorites.includes(results[index]))
+                        setFavorites([...favorites, results[index]]);
+                    }}
                   >
                     <PlusSign color="#ff6584" />
                   </span>

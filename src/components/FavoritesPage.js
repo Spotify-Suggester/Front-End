@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, {useState, useEffect, useContext} from "react";
 import axios from "axios";
 import {UserContext} from "../contexts/UserContext";
@@ -10,17 +9,6 @@ import NavigationBar from "./NavigationBar";
 import ListComponent from "./ListComponent";
 import RadarChart from "./RadarChart";
 import Container from "@material-ui/core/Container";
-=======
-import React, { useState } from 'react';
-import { FavoritesContext } from '../context/FavoritesContext';
-import FavoritesList from './FavoritesList';
-import SearchForm from './SearchForm';
-import SuggestionForm from './SuggestionForm';
-import NavigationBar from './NavigationBar'
-import ListComponent from './ListComponent';
-import RadarChart from './RadarChart'
-import Container from '@material-ui/core/Container';
->>>>>>> 224540c8ec09308fc61ffb0f8add560f18c31f9b
 import {makeStyles} from "@material-ui/core/styles";
 
 import {axiosWithUserAuth, axiosWithSpotifyAuth} from "../utils/axiosWithAuth";
@@ -46,25 +34,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const useStyles = makeStyles(() => ({
- container: {
-   display: "flex",
-   margin: "0",
-   padding: "0",
-   paddingTop: "64px"
- },
- emptyContainer:{
-   width: "450px",
-   minWidth: "450px",
-   margin: "0"
- },
- 
-}))
-
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
-  const [results, setResults] = useState(data);
-<<<<<<< HEAD
+  const [results, setResults] = useState([]);
   const {userId, setUserId} = useContext(UserContext);
 
   useEffect(() => {
@@ -79,21 +51,13 @@ const FavoritesPage = () => {
   const classes = useStyles();
 
   return (
-    <FavoritesContext.Provider value={{favorites, setFavorites, results}}>
+    <FavoritesContext.Provider
+      value={{favorites, setFavorites, results, setResults}}
+    >
       <Container className={classes.container} maxWidth="full">
         <NavigationBar />
         <FavoritesList />
         <Container className={classes.emptyContainer} />
-=======
-  const classes = useStyles()
-
-  return (
-    <FavoritesContext.Provider value={{ favorites, setFavorites, results }}>
-      <Container className={classes.container} maxWidth="full">
-        <NavigationBar />
-        <FavoritesList />
-        <Container className={classes.emptyContainer}/>
->>>>>>> 224540c8ec09308fc61ffb0f8add560f18c31f9b
         <Container>
           <SearchForm />
           <ListComponent />
@@ -103,11 +67,6 @@ const FavoritesPage = () => {
           <RadarChart />
         </Container>
       </Container>
-<<<<<<< HEAD
-=======
-      
-      
->>>>>>> 224540c8ec09308fc61ffb0f8add560f18c31f9b
     </FavoritesContext.Provider>
   );
 };

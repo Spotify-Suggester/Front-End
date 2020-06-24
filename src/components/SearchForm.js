@@ -9,6 +9,7 @@ import {
   axiosWithUserAuth,
   axiosWithSpotifyAuth
 } from '../utils/axiosWithAuth';
+import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -62,6 +63,7 @@ const SearchForm = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const { setResults } = useContext(FavoritesContext);
 
   // const formSchema = yup.object().shape({
   //   searchTerm: yup.string().required('Search term is required')
@@ -85,6 +87,8 @@ const SearchForm = () => {
   }, [searchTerm]);
 
   const formSubmit = (e) => {
+    setResults([]);
+
     const searchString = searchTerm.replace(' ', '%20');
 
     e.preventDefault();
@@ -92,7 +96,10 @@ const SearchForm = () => {
       .get(
         `https://api.spotify.com/v1/search?q=${searchString}&type=track%2Cartist&market=US&limit=10&offset=5`
       )
-      .then((res) => console.log('spotify get req', res))
+      .then((res) => {
+        console.log('spotify get req', res.data.tracks.items);
+        setResults(res.data.tracks.items);
+      })
       .catch((err) => console.error('spotify get req error', err));
 
     setSearchTerm('');
@@ -111,7 +118,7 @@ const SearchForm = () => {
           <TextField
             name='search-bar'
             id='search-bar'
-            label='Search your favorites songs'
+            label='Search for your favorite songs'
             fullWidth
             onChange={inputChange}
             value={searchTerm}

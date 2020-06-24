@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import * as Yup from "yup";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
 import {TextField, Box, Button, Divider, Grid} from "@material-ui/core";
+import {UserContext} from "../contexts/UserContext";
 
 const formSchema = Yup.object().shape({
   username: Yup.string()
@@ -18,11 +19,7 @@ const formSchema = Yup.object().shape({
 const RegisterForm = (props) => {
   const history = useHistory();
 
-  const [registerData, setRegisterData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const {loginData, setLoginData, setUserId} = useContext(UserContext);
 
   const [serverError, setServerError] = useState("");
 
@@ -35,10 +32,10 @@ const RegisterForm = (props) => {
   });
 
   useEffect(() => {
-    formSchema.isValid(registerData).then((valid) => {
+    formSchema.isValid(loginData).then((valid) => {
       setButtonDisabled(!valid);
     });
-  }, [registerData]);
+  }, [loginData]);
 
   const validateChange = (event) => {
     Yup.reach(formSchema, event.target.name)
@@ -59,8 +56,8 @@ const RegisterForm = (props) => {
 
   const handleChange = (event) => {
     event.persist();
-    setRegisterData({
-      ...registerData,
+    setLoginData({
+      ...loginData,
       [event.target.name]: event.target.value,
     });
     validateChange(event);
@@ -70,13 +67,31 @@ const RegisterForm = (props) => {
     event.preventDefault();
     axios
       .post("https://spotify-suggester1.herokuapp.com/api/auth/register", {
-        username: registerData.username,
-        password: registerData.password,
+        username: loginData.username,
+        password: loginData.password,
       })
       .then((response) => {
-        console.log(response.data);
+        console.log("new user created", response.data);
+      })
+      .catch((err) => {
+        setServerError("oops! something's not right!");
+      });
 
-        setRegisterData({
+    axios
+      .post("https://spotify-suggester1.herokuapp.com/api/auth/login", {
+        username: loginData.username,
+        password: loginData.password,
+      })
+      .then((response) => {
+        console.log("response", response);
+        setUserId(response.data.auth.id);
+        localStorage.setItem("token", response.data.auth.token);
+        localStorage.setItem(
+          "access_token",
+          response.data.spotify.access_token
+        );
+
+        setLoginData({
           username: "",
           password: "",
           confirmPassword: "",
@@ -84,11 +99,9 @@ const RegisterForm = (props) => {
 
         setServerError(null);
 
-        history.push("/Favorites");
+        history.push("/favorites");
       })
-      .catch((err) => {
-        setServerError("oops! something's not right!");
-      });
+      .catch();
   };
 
   return (
@@ -99,7 +112,7 @@ const RegisterForm = (props) => {
           id="username"
           name="username"
           label="Username"
-          value={registerData.username}
+          value={loginData.username}
           onChange={handleChange}
           fullWidth
         />
@@ -113,7 +126,7 @@ const RegisterForm = (props) => {
           label="Password"
           type="password"
           autoComplete="current-password"
-          value={registerData.password}
+          value={loginData.password}
           onChange={handleChange}
           fullWidth
         />
@@ -126,7 +139,7 @@ const RegisterForm = (props) => {
           label="Confirm Password"
           type="password"
           autoComplete="current-password"
-          value={registerData.confirmPassword}
+          value={loginData.confirmPassword}
           onChange={handleChange}
           fullWidth
         />
