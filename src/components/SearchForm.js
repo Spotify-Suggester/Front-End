@@ -98,7 +98,17 @@ const SearchForm = () => {
       )
       .then((res) => {
         console.log('spotify get req', res.data.tracks.items);
-        setResults(res.data.tracks.items);
+        const data = res.data.tracks.items;
+        const songs = data.map((track) => {
+          return {
+            id: track.id,
+            name: track.name,
+            artist: track.artists[0].name,
+            album: track.album.name
+          };
+        });
+        console.log('songs', songs);
+        setResults(songs);
       })
       .catch((err) => console.error('spotify get req error', err));
 

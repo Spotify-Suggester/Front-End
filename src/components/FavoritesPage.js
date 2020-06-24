@@ -48,6 +48,29 @@ const FavoritesPage = () => {
       .catch((err) => console.error('err', err.response));
   }, []);
 
+  const addFavorite = (song) => {
+    if (!favorites.includes(song)) {
+      setFavorites([...favorites, song]);
+      axiosWithUserAuth()
+        .post(
+          `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`,
+          { song_id: song.id }
+        )
+        .then((res) => console.log('post response', res))
+        .catch((err) => console.error('post error', err.message));
+    }
+  };
+
+  const removeFavorite = (song) => {
+    setFavorites(favorites.filter((item) => item.id != song.id));
+    axiosWithUserAuth()
+      .delete(
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites/${song.id}`
+      )
+      .then((res) => console.log('delete response', res))
+      .catch((err) => console.error('delete error', err));
+  };
+
   const classes = useStyles();
 
   return (
@@ -58,7 +81,9 @@ const FavoritesPage = () => {
         results,
         setResults,
         suggestions,
-        setSuggestions
+        setSuggestions,
+        addFavorite,
+        removeFavorite
       }}
     >
       <Container className={classes.container} maxWidth='full'>

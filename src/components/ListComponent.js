@@ -59,7 +59,13 @@ const useStyle = makeStyles(() => ({
 }));
 
 function ListComponent(props) {
-  const { favorites, setFavorites, results } = useContext(FavoritesContext);
+  const {
+    favorites,
+    setFavorites,
+    addFavorite,
+    removeFavorite,
+    results
+  } = useContext(FavoritesContext);
   const { userId } = useContext(UserContext);
 
   let dataList = [];
@@ -72,31 +78,8 @@ function ListComponent(props) {
   const classes = useStyle();
 
   const rows = dataList.map((result) => {
-    return createData(result.id, result.name, result.artists[0].name, 2000);
+    return createData(result.id, result.name, result.artist, 2000);
   });
-
-  const addFavorite = (song) => {
-    if (!favorites.includes(song)) {
-      setFavorites([...favorites, song]);
-      axiosWithUserAuth()
-        .post(
-          `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`,
-          { song_id: song.id }
-        )
-        .then((res) => console.log('post response', res))
-        .catch((err) => console.error('post error', err.message));
-    }
-  };
-
-  const removeFavorite = (song) => {
-    setFavorites(favorites.filter((item) => item.id != song.id));
-    axiosWithUserAuth()
-      .delete(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites/${song.id}`
-      )
-      .then((res) => console.log('delete response', res))
-      .catch((err) => console.error('delete error', err));
-  };
 
   return (
     <TableContainer
