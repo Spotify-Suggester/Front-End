@@ -40,7 +40,7 @@ function createData(id, name, artist, year) {
 
 const useStyle = makeStyles(() => ({
   container: {
-    maxHeight: "80vh",
+    maxHeight: "75vh",
     "&::-webkit-scrollbar": {
       width: "10px"
     },

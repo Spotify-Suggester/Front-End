@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
       color: "white",
       width: "calc(100% - 48px)",
       position: "absolute",
-      bottom: "30px"
+      bottom: "100px"
     },
   },
   header: {
@@ -34,7 +34,7 @@ const FavoritesList = () => {
   
   const { favorites, setFavorites } = useContext(FavoritesContext);
   return (
-    <Container className={classes.container}>
+    <Container className={classes.container} >
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type="favorite"/>
       <Button  variant='contained' size="large">
