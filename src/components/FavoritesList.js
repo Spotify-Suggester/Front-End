@@ -26,10 +26,11 @@ const useStyles = makeStyles(() => ({
     },
   },
   header: {
+    fontWeight: 300,
     textAlign: "center"
   }
 }))
-const FavoritesList = () => {
+const FavoritesList = (props) => {
   const classes = useStyles()
   
   const { favorites, setFavorites } = useContext(FavoritesContext);
@@ -37,7 +38,7 @@ const FavoritesList = () => {
     <Container className={classes.container} >
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type="favorite"/>
-      <Button  variant='contained' size="large">
+      <Button  variant='contained' size="large" onClick={() => {props.setIsShowing("suggestions")}}>
         Suggest Songs
       </Button>
     </Container>

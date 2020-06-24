@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
 import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
-import SuggestionForm from './SuggestionForm';
+import SuggestionList from './SuggestionList';
 import NavigationBar from './NavigationBar'
 import ListComponent from './ListComponent';
 import RadarChart from './RadarChart'
+import SearchMood from "./SearchMood"
 import Container from '@material-ui/core/Container';
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -24,27 +25,38 @@ const useStyles = makeStyles(() => ({
    minWidth: "450px",
    margin: "0"
  },
+ mainContainer: {
+  paddingTop: "30px"
+ }
  
 }))
 
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
   const [results, setResults] = useState(data);
+  const [isShowing, setIsShowing] = useState("search")
   const classes = useStyles()
 
   return (
     <FavoritesContext.Provider value={{ favorites, setFavorites, results }}>
       <Container className={classes.container} maxWidth="full">
-        <NavigationBar />
-        <FavoritesList />
+        <NavigationBar setIsShowing={setIsShowing}/>
+        <FavoritesList setIsShowing={setIsShowing}/>
         <Container className={classes.emptyContainer}/>
-        <Container>
-          <SearchForm />
-          <ListComponent />
-          <SuggestionForm />
-          <RadarChart />
-          <GenreListSearch />
-          <RadarChart />
+        <Container className={classes.mainContainer}>
+          {(isShowing === "search")?(
+            <>
+              <SearchForm />
+              <ListComponent />
+            </>
+          ):(isShowing === "mood")? (
+            <SearchMood />
+          ):
+          (
+            <SuggestionList />
+          )}
+          {/* <RadarChart />
+          <GenreListSearch /> */}
         </Container>
       </Container>
       

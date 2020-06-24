@@ -30,12 +30,16 @@ const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
       backgroundColor: 'rgba(0,0,0,.45)'
+    },
+    "& .MuiTableCell-root:first-child": {
+      minWidth: "30px",
+      width: "50px"
     }
   }
 }))(TableRow);
 
-function createData(id, name, artist, year) {
-  return { id, name, artist, year };
+function createData(id, name, album, artist) {
+  return { id, name, album, artist };
 }
 
 const useStyle = makeStyles(() => ({
@@ -62,14 +66,19 @@ function ListComponent(props) {
   if(props.type === "favorite") {
     dataList = favorites
   } else {
-    dataList = results
+    if(props.suggestions) {
+      dataList = props.suggestions
+    } else {
+      dataList = results
+    }
+    
   }
 
   const classes = useStyle();
 
 
   const rows = dataList.map((result) => {
-    return createData(result .id, result.name, result.artists[0].name, 2000);
+    return createData(result .id, result.name,result.album.name, result.artists[0].name);
   });
 
   return (
@@ -81,8 +90,8 @@ function ListComponent(props) {
             <StyledTableCell>Song Name</StyledTableCell>
             {(props.type !== "favorite") ? (
               <>
-              <StyledTableCell align='right'>Artist</StyledTableCell>
-              <StyledTableCell align='right'>Year</StyledTableCell>
+                <StyledTableCell align='right'>Artist</StyledTableCell>
+                <StyledTableCell align='right'>Album</StyledTableCell>
               </>
             ) : ""
           }
@@ -115,7 +124,7 @@ function ListComponent(props) {
               {(props.type !== "favorite") ? (
                 <>
                   <StyledTableCell align='right'>{row.artist}</StyledTableCell>
-                  <StyledTableCell align='right'>{row.year}</StyledTableCell>
+                  <StyledTableCell align='right'>{row.album}</StyledTableCell>
                 </>
                 ): ""
               }

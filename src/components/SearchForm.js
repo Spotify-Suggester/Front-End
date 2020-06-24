@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     padding: '0'
   },
   formContainer: {
-    padding: "20px 0 30px"
+    padding: "0px 0 30px"
   },
   form: {
     display: "flex",

@@ -11,11 +11,9 @@ const useStyles = makeStyles(() => ({
         borderBottom: "1px solid #6c63FF",
         "& .MuiButton-root": {
             backgroundColor: "#ff6584",
-            color: "white"
+            color: "white",
+            marginLeft: "20px"
           }
-    },
-    menuButton: {
-        marginRight: "2px",
     },
     title: {
         flexGrow: 1,
@@ -24,7 +22,7 @@ const useStyles = makeStyles(() => ({
   }),
 );
 
-const NavigationBar = () => {
+const NavigationBar = (props) => {
     const classes = useStyles();
     return (
         <AppBar position="fixed" className={classes.bar}>
@@ -32,6 +30,8 @@ const NavigationBar = () => {
             <Typography variant="h6" className={classes.title}>
                 Spotify Suggestions
             </Typography>
+            <Button size="large" onClick={() => {props.setIsShowing("search")}}>Search Favorites</Button>
+            <Button size="large" onClick={() => {props.setIsShowing("mood")}}>Search by Mood</Button>
             <Button size="large">Logout</Button>
             </Toolbar>
         </AppBar>
