@@ -87,6 +87,8 @@ const SearchForm = () => {
   }, [searchTerm]);
 
   const formSubmit = (e) => {
+    setResults([]);
+
     const searchString = searchTerm.replace(' ', '%20');
 
     e.preventDefault();

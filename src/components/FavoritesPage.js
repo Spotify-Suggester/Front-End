@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
 
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
-  const [results, setResults] = useState(data);
+  const [results, setResults] = useState([]);
   const { userId, setUserId } = useContext(UserContext);
 
   useEffect(() => {
@@ -54,7 +54,9 @@ const FavoritesPage = () => {
   const classes = useStyles();
 
   return (
-    <FavoritesContext.Provider value={{ favorites, setFavorites, results }}>
+    <FavoritesContext.Provider
+      value={{ favorites, setFavorites, results, setResults }}
+    >
       <Container className={classes.container} maxWidth='full'>
         <NavigationBar />
         <FavoritesList />
