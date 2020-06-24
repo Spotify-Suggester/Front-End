@@ -4,7 +4,7 @@ import { UserContext } from '../contexts/UserContext';
 import { FavoritesContext } from '../contexts/FavoritesContext';
 import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
-import SuggestionForm from './SuggestionForm';
+import Suggestions from './Suggestions';
 import NavigationBar from './NavigationBar';
 import ListComponent from './ListComponent';
 import RadarChart from './RadarChart';
@@ -18,11 +18,6 @@ import {
 import { data } from '../data';
 import GenreListSearch from './GenreListSearch';
 
-// api call will be something similar to this
-// const dynamicData = axiosWithSpotifyAuth()
-//   .get('https://api.spotify.com/v1/search?q=tania%20bowra&type=artist')
-//   .then((res) => console.log(res.data))
-//   .catch((err) => console.log(err.message));
 const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
@@ -40,6 +35,7 @@ const useStyles = makeStyles(() => ({
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
   const [results, setResults] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const { userId, setUserId } = useContext(UserContext);
 
   useEffect(() => {
@@ -48,14 +44,22 @@ const FavoritesPage = () => {
       .get(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`
       )
-      .then((response) => console.log('response', response))
+      .then((res) => setFavorites(res.data.favorite_songs))
       .catch((err) => console.error('err', err.response));
   }, []);
+
   const classes = useStyles();
 
   return (
     <FavoritesContext.Provider
-      value={{ favorites, setFavorites, results, setResults }}
+      value={{
+        favorites,
+        setFavorites,
+        results,
+        setResults,
+        suggestions,
+        setSuggestions
+      }}
     >
       <Container className={classes.container} maxWidth='full'>
         <NavigationBar />
@@ -64,7 +68,7 @@ const FavoritesPage = () => {
         <Container>
           <SearchForm />
           <ListComponent />
-          <SuggestionForm />
+          <Suggestions />
           <RadarChart />
           <GenreListSearch />
           <RadarChart />

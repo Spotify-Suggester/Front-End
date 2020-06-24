@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { FavoritesContext } from '../contexts/FavoritesContext';
+import { UserContext } from '../contexts/UserContext';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,6 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import PlusSign from '../svg/PlusSign';
 import MinusSign from '../svg/MinusSign';
+import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 
 const StyledTableCell = withStyles((theme) => ({
   root: {
@@ -58,6 +60,8 @@ const useStyle = makeStyles(() => ({
 
 function ListComponent(props) {
   const { favorites, setFavorites, results } = useContext(FavoritesContext);
+  const { userId } = useContext(UserContext);
+
   let dataList = [];
   if (props.type === 'favorite') {
     dataList = favorites;
@@ -70,6 +74,29 @@ function ListComponent(props) {
   const rows = dataList.map((result) => {
     return createData(result.id, result.name, result.artists[0].name, 2000);
   });
+
+  const addFavorite = (song) => {
+    if (!favorites.includes(song)) {
+      setFavorites([...favorites, song]);
+      axiosWithUserAuth()
+        .post(
+          `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`,
+          { song_id: song.id }
+        )
+        .then((res) => console.log('post response', res))
+        .catch((err) => console.error('post error', err.message));
+    }
+  };
+
+  const removeFavorite = (song) => {
+    setFavorites(favorites.filter((item) => item.id != song.id));
+    axiosWithUserAuth()
+      .delete(
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites/${song.id}`
+      )
+      .then((res) => console.log('delete response', res))
+      .catch((err) => console.error('delete error', err));
+  };
 
   return (
     <TableContainer
@@ -92,25 +119,18 @@ function ListComponent(props) {
         </TableHead>
         <TableBody>
           {rows.map((row, index) => (
-            <StyledTableRow key={row.name}>
+            <StyledTableRow key={row.id}>
               <StyledTableCell component='th' scope='row'>
                 {props.type !== 'favorite' ? (
                   <span
                     onClick={() => {
-                      if (!favorites.includes(results[index]))
-                        setFavorites([...favorites, results[index]]);
+                      addFavorite(results[index]);
                     }}
                   >
                     <PlusSign color='#ff6584' />
                   </span>
                 ) : (
-                  <span
-                    onClick={() =>
-                      setFavorites(
-                        favorites.filter((item) => item.id != row.id)
-                      )
-                    }
-                  >
+                  <span onClick={() => removeFavorite(row)}>
                     <MinusSign color='#ff6584' />
                   </span>
                 )}
