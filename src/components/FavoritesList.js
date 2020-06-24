@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ListComponent from './ListComponent';
 import Button from '@material-ui/core/Button';
 import zIndex from '@material-ui/core/styles/zIndex';
+import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -30,8 +31,22 @@ const useStyles = makeStyles(() => ({
 }));
 const FavoritesList = () => {
   const classes = useStyles();
+  const { favorites, setFavorites, setSuggestions } = useContext(
+    FavoritesContext
+  );
 
-  const { favorites, setFavorites } = useContext(FavoritesContext);
+  const getSuggestions = () => {
+    let seeds = [];
+    favorites.forEach((favorite) => seeds.push(favorite.id));
+    axiosWithUserAuth()
+      .get('https://spotify-suggester1.herokuapp.com/api/users/1/recommend')
+      .then((res) => {
+        console.log('get res', res);
+        setSuggestions(res.data.recommended_songs);
+      })
+      .catch((err) => console.error('get err', err.message));
+  };
+
   return (
     <Container className={classes.container}>
       <h2 className={classes.header}>Favorite Songs</h2>
@@ -39,6 +54,7 @@ const FavoritesList = () => {
       <Button variant='contained' size='large'>
         Suggest Songs
       </Button>
+      <button onClick={getSuggestions}>Suggest Songs</button>
     </Container>
   );
 };
