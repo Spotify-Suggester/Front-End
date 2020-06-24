@@ -1,9 +1,10 @@
 // Login form
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { TextField, Box, Button, Divider, Grid } from '@material-ui/core';
+import { UserContext } from '../contexts/UserContext';
 
 const formSchema = Yup.object().shape({
   username: Yup.string()
@@ -21,6 +22,8 @@ const LoginForm = (props) => {
   });
 
   const [serverError, setServerError] = useState('');
+
+  const { userId, setUserId } = useContext(UserContext);
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
@@ -69,6 +72,8 @@ const LoginForm = (props) => {
         password: loginData.password
       })
       .then((response) => {
+        console.log('response', response);
+        setUserId(response.data.auth.id);
         localStorage.setItem('token', response.data.auth.token);
         localStorage.setItem(
           'access_token',
@@ -124,7 +129,7 @@ const LoginForm = (props) => {
           fullWidth
           disabled={buttonDisabled}
         >
-          Sign into Spotify
+          Sign In
         </Button>
       </Box>
       <Box textAlign='center'>
