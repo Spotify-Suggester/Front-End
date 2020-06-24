@@ -13,16 +13,17 @@ const useStyles = makeStyles(() => ({
     left: 0,
   },
   hero: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     position: "relative",
-    backgroundImage: "linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3)), url(https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)",
+    backgroundImage: "linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)",
     backgroundSize: "cover",
     backgroundPosition: "center",
     minHeight: "20rem",
   },
   brandTitle: {
-    position: "absolute",
-    width: "100%",
-    top: "42.5%",
     color: "white",
     textAlign: "center",
   },
@@ -75,11 +76,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   svg: {
-    position: "absolute",
-    width: "130px",
-    top: "30%",
-    left: "50%",
-    transform: "translate(-50%, 0)"
+    width: "100px",
   }
 }));
 
@@ -105,6 +102,7 @@ const Login = () => {
         <Grid item xs={12} md={6} className={classes.hero}>
           <Logo className={classes.svg}/>
           <h1 className={classes.brandTitle}>Spotify Suggester</h1>
+          <span>Best app to find new songs based on your selections.</span>
         </Grid>
         <Grid item xs={12} md={6} className={classes.formContainer}>
           <Box className={classes.form}>

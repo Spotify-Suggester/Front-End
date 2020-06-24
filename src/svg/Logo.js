@@ -1,11 +1,10 @@
 import React from 'react';
-import {makeStyles} from "@material-ui/core/styles";
  const classes = {
     cls_1: {
         fill: "#6c63ff",
-        stroke: "#ffffff",
+        stroke: "#000",
         strokeMiterlimit: "10",
-        strokeWidth:"0px",
+        strokeWidth:"10px",
     },
     cls_2: {
         fill: "none",
