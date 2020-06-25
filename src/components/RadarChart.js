@@ -1,6 +1,14 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
+
+const styles = {
+  radar: {
+    margin: "-50px 0 -50px -10px"
+  }
+}
+
+
 const RadarChart = () => {
 
     const chartConfig = {
@@ -34,7 +42,7 @@ const RadarChart = () => {
             }
           },
           xaxis: {
-            categories: ["danceability", "energy", "mode", "speechiness", "instrumentalness", "liveness", "valence"],
+            categories: ["danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"],
           },
           yaxis: {
             show: false
@@ -49,11 +57,11 @@ const RadarChart = () => {
         series: [
           {
             name: "Actual Song",
-            data: [.1, .4, .45, .50, .49, .60, .70]
+            data: [.1, .4, .45, .50, .49, .60, .70, .3]
           },
           {
             name: "Suggestion Average",
-            data: [.10, .50, .22, .11, .70, .90, .30]
+            data: [.10, .50, .22, .11, .70, .90, .30, .6]
           }
         ]
       };
@@ -62,7 +70,8 @@ const RadarChart = () => {
               options={chartConfig.options}
               series={chartConfig.series}
               type="radar"
-              width="600"
+              width="100%"
+              style={styles.radar}
             />
     )
 }
