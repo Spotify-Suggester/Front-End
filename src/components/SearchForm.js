@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
     padding: '0'
   },
   formContainer: {
-    padding: '20px 0 30px'
+    padding: '0px 0 30px'
   },
   form: {
     display: 'flex',
@@ -32,7 +32,10 @@ const useStyles = makeStyles(() => ({
     },
 
     '& .MuiButton-contained': {
-      backgroundColor: '#6C63FF'
+      backgroundColor: '#6C63FF',
+      '&:hover': {
+        background: '#4a41d4'
+      }
     },
 
     '& .MuiInput-underline:before': {
@@ -128,7 +131,7 @@ const SearchForm = () => {
           <TextField
             name='search-bar'
             id='search-bar'
-            label='Search for your favorite songs'
+            label='Search your favorites songs or artist'
             fullWidth
             onChange={inputChange}
             value={searchTerm}
@@ -145,15 +148,6 @@ const SearchForm = () => {
         </Box>
       </Grid>
     </Container>
-
-    // <>
-    //   <form>
-    //
-    //     <Button variant='contained' color='secondary'>
-    //       Search
-    //     </Button>
-    //   </form>
-    // </>
   );
 };
 

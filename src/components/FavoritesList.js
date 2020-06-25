@@ -22,14 +22,14 @@ const useStyles = makeStyles(() => ({
       color: 'white',
       width: 'calc(100% - 48px)',
       position: 'absolute',
-      bottom: '100px'
+      bottom: '500px'
     }
   },
   header: {
     textAlign: 'center'
   }
 }));
-const FavoritesList = () => {
+const FavoritesList = (props) => {
   const classes = useStyles();
   const { favorites, setFavorites, setSuggestions } = useContext(
     FavoritesContext
@@ -51,10 +51,16 @@ const FavoritesList = () => {
     <Container className={classes.container}>
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
-      <Button variant='contained' size='large'>
+      <Button
+        variant='contained'
+        size='large'
+        onClick={() => {
+          props.setIsShowing('suggestions');
+          getSuggestions();
+        }}
+      >
         Suggest Songs
       </Button>
-      <button onClick={getSuggestions}>Suggest Songs</button>
     </Container>
   );
 };

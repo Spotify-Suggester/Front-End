@@ -4,10 +4,11 @@ import { UserContext } from '../contexts/UserContext';
 import { FavoritesContext } from '../contexts/FavoritesContext';
 import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
-import Suggestions from './Suggestions';
+import SuggestionList from './SuggestionList';
 import NavigationBar from './NavigationBar';
 import ListComponent from './ListComponent';
-import RadarChart from './RadarChart';
+
+import SearchMood from './SearchMood';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -37,6 +38,9 @@ const FavoritesPage = () => {
   const [results, setResults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const { userId, setUserId } = useContext(UserContext);
+  const [isShowing, setIsShowing] = useState('search');
+
+  const classes = useStyles();
 
   useEffect(() => {
     console.log('userId', userId);
@@ -71,8 +75,6 @@ const FavoritesPage = () => {
       .catch((err) => console.error('delete error', err));
   };
 
-  const classes = useStyles();
-
   return (
     <FavoritesContext.Provider
       value={{
@@ -87,16 +89,22 @@ const FavoritesPage = () => {
       }}
     >
       <Container className={classes.container} maxWidth='full'>
-        <NavigationBar />
-        <FavoritesList />
+        <NavigationBar setIsShowing={setIsShowing} />
+        <FavoritesList setIsShowing={setIsShowing} />
         <Container className={classes.emptyContainer} />
-        <Container>
-          <SearchForm />
-          <ListComponent />
-          <Suggestions />
-          <RadarChart />
-          <GenreListSearch />
-          <RadarChart />
+        <Container className={classes.mainContainer}>
+          {isShowing === 'search' ? (
+            <>
+              <SearchForm />
+              <ListComponent />
+            </>
+          ) : isShowing === 'mood' ? (
+            <SearchMood />
+          ) : (
+            <SuggestionList />
+          )}
+          {/* 
+          <GenreListSearch /> */}
         </Container>
       </Container>
     </FavoritesContext.Provider>
