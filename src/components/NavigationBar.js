@@ -59,7 +59,11 @@ const NavigationBar = (props) => {
         >
           Search by Mood
         </Button>
-        <Button size='large' href='#'>
+        <Button
+          size='large'
+          href='https://quizzical-goodall-28a278.netlify.app/'
+          target='_blank'
+        >
           About Us
         </Button>
         <Button size='large' onClick={logout}>
