@@ -12,7 +12,10 @@ const useStyles = makeStyles(() => ({
         "& .MuiButton-root": {
             backgroundColor: "#ff6584",
             color: "white",
-            marginLeft: "20px"
+            marginLeft: "20px",
+            "&:hover": {
+                background: "#cc3b58"
+            }
           }
     },
     title: {

@@ -22,7 +22,10 @@ const useStyles = makeStyles(() => ({
       color: "white",
       width: "calc(100% - 48px)",
       position: "absolute",
-      bottom: "100px"
+      bottom: "100px",
+      "&:hover": {
+        background: "#4a41d4"
+      }
     },
   },
   header: {

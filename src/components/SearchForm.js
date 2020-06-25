@@ -28,6 +28,9 @@ const useStyles = makeStyles(() => ({
 
     "& .MuiButton-contained": {
       backgroundColor: "#6C63FF",
+      "&:hover": {
+        background: "#4a41d4"
+      }
     },
 
     "& .MuiInput-underline:before": {

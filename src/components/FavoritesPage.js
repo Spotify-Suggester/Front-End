@@ -5,7 +5,7 @@ import SearchForm from './SearchForm';
 import SuggestionList from './SuggestionList';
 import NavigationBar from './NavigationBar'
 import ListComponent from './ListComponent';
-import RadarChart from './RadarChart'
+
 import SearchMood from "./SearchMood"
 import Container from '@material-ui/core/Container';
 import {makeStyles} from "@material-ui/core/styles";
@@ -55,7 +55,7 @@ const FavoritesPage = () => {
           (
             <SuggestionList />
           )}
-          {/* <RadarChart />
+          {/* 
           <GenreListSearch /> */}
         </Container>
       </Container>

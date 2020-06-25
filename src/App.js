@@ -11,7 +11,7 @@ function App() {
     
     <Router>
       <Route exact path='/' component={Login} />
-      <Route path='/favorites' component={FavoritesPage} />
+      <Route path='/home' component={FavoritesPage} />
       {/* '/favorites' will become a PrivateRoute */}
     </Router>
   );

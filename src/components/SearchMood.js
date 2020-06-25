@@ -21,7 +21,10 @@ const useStyle = makeStyles(() => ({
             backgroundColor: "#6C63FF",
             color: "white",
             marginLeft: "20px",
-            width: "150px"
+            width: "150px",
+            "&:hover": {
+                background: "#4a41d4"
+              }
           },
         "& .MuiSlider-root" : {
             color: "#ff6584"
@@ -55,6 +58,10 @@ const SearchMood = () => {
                         marks
                         min={0}
                         max={1}
+                        onChangeCommitted={(e) => {
+                            console.log(e.target.getAttribute("aria-valuenow"));
+                            
+                        }}
                     />
                 </Box>
             ))}

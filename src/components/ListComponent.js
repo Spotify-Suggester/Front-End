@@ -1,6 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Collapse from '@material-ui/core/Collapse';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,6 +13,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import PlusSign from '../svg/PlusSign';
 import MinusSign from '../svg/MinusSign';
+import ArrowDown from '../svg/ArrowDown'
+import ArrowUp from '../svg/ArrowUp'
+import RadarChart from './RadarChart'
+import { data } from '../data';
 
 const StyledTableCell = withStyles((theme) => ({
   root: {
@@ -28,12 +36,13 @@ const StyledTableCell = withStyles((theme) => ({
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: 'rgba(0,0,0,.45)'
-    },
     "& .MuiTableCell-root:first-child": {
       minWidth: "30px",
       width: "50px"
+    },
+    "& svg:hover path": {
+      fill: "#cc3b58",
+      cursor: "pointer"
     }
   }
 }))(TableRow);
@@ -57,6 +66,11 @@ const useStyle = makeStyles(() => ({
     "&::-webkit-scrollbar-thumb:hover": {
       background: "#ff6584"
     }
+  }, 
+  normalRow: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: 'rgba(0,0,0,.45)'
+    },
   }
 }))
 
@@ -87,11 +101,13 @@ function ListComponent(props) {
         <TableHead>
           <TableRow>
             <StyledTableCell></StyledTableCell>
+            
             <StyledTableCell>Song Name</StyledTableCell>
             {(props.type !== "favorite") ? (
               <>
                 <StyledTableCell align='right'>Artist</StyledTableCell>
                 <StyledTableCell align='right'>Album</StyledTableCell>
+                {props.suggestions ? <StyledTableCell></StyledTableCell>: ""}
               </>
             ) : ""
           }
@@ -100,36 +116,43 @@ function ListComponent(props) {
         </TableHead>
         <TableBody>
           {rows.map((row, index) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component='th' scope='row'>
-                {
-                  (props.type !== "favorite") ? 
-                    <span onClick={() => setFavorites([...favorites, results[index]])}>
-                      <PlusSign 
-                        color="#ff6584"
-                      />
-                    </span>
-                    :
-                    <span onClick={() => setFavorites(favorites.filter((item) => item.id != row.id))}>
-                      <MinusSign 
-                        color="#ff6584"
-                      />
-                    </span>
-                }
-                
-              </StyledTableCell>
-              <StyledTableCell component='th' scope='row'>
-                {row.name}
-              </StyledTableCell>
-              {(props.type !== "favorite") ? (
-                <>
-                  <StyledTableCell align='right'>{row.artist}</StyledTableCell>
-                  <StyledTableCell align='right'>{row.album}</StyledTableCell>
-                </>
-                ): ""
-              }
-            </StyledTableRow>
-          ))}
+            (props.suggestions) ? 
+              <Row key={row} row={row} dataList={dataList} index={index}/>
+            :
+              <>
+                <StyledTableRow key={row.name} className={classes.normalRow}>
+                  <StyledTableCell component='th' scope='row'>
+                    {
+                      (props.type !== "favorite") ? 
+                        <span onClick={() => setFavorites([...favorites, dataList[index]])}>
+                          <PlusSign 
+                            color="#ff6584"
+                          />
+                        </span>
+                        :
+                        <span onClick={() => setFavorites(favorites.filter((item) => item.id != row.id))}>
+                          <MinusSign 
+                            color="#ff6584"
+                          />
+                        </span>
+                    }
+                    
+                  </StyledTableCell>
+                  <StyledTableCell component='th' scope='row'>
+                    {row.name}
+                  </StyledTableCell>
+                  {(props.type !== "favorite") ? (
+                    <>
+                      <StyledTableCell align='right'>{row.artist}</StyledTableCell>
+                      <StyledTableCell align='right'>{row.album}</StyledTableCell>
+                    </>
+                    ): ""
+                  }
+                </StyledTableRow>
+              </>
+          )
+          
+          )}
         </TableBody>
       </Table>
     </TableContainer>
@@ -137,3 +160,61 @@ function ListComponent(props) {
 }
 
 export default ListComponent;
+
+
+const useRowStyles = makeStyles({
+  collapseRow: {
+    '&:nth-of-type(4n+1)': {
+      backgroundColor: 'rgba(0,0,0,.45)'
+    },
+    "& .MuiTableCell-root:last-child": {
+      minWidth: "30px",
+      width: "50px",
+      lineHeight: 2
+    },
+  }
+});
+
+
+function Row(props) {
+  const { row, dataList, index } = props;
+  const [open, setOpen] = useState(false);
+  const { favorites, setFavorites, results } = useContext(FavoritesContext);
+  const classes = useRowStyles();
+
+  return (
+    <>
+      <StyledTableRow className={classes.collapseRow}>
+        <StyledTableCell component='th' scope='row'>
+          <span onClick={() => setFavorites([...favorites, dataList[index]])}>
+            <PlusSign 
+              color="#ff6584"
+            />
+          </span>  
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
+          {row.name}
+        </StyledTableCell>
+        <StyledTableCell align="right">{row.artist}</StyledTableCell>
+        <StyledTableCell align="right">{row.album}</StyledTableCell>
+        <StyledTableCell>
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+            {open ? <ArrowUp />: <ArrowDown /> }
+          </IconButton>
+        </StyledTableCell>
+      </StyledTableRow>
+      <TableRow>
+        <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <Typography variant="h6" gutterBottom component="div">
+                Description
+              </Typography>
+              <RadarChart />
+            </Box>
+          </Collapse>
+        </StyledTableCell>
+      </TableRow>
+    </>
+  );
+}
