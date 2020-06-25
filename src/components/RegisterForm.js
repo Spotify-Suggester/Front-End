@@ -29,7 +29,7 @@ const RegisterForm = (props) => {
     password: Yup.string()
       .min(6, "Password should be a minimum of 6 characters.")
       .required("Password is a required field"),
-    confirmPassword: Yup.string().matches(regex, "Passwords must match"),
+    confirmPassword: Yup.string().matches(regex, "Password does not match."),
   });
 
   useEffect(() => {
