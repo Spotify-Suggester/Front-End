@@ -101,7 +101,8 @@ function ListComponent(props) {
   const classes = useStyle();
 
   const rows = dataList.map((result) => {
-    return createData(result.id, result.name, result.artist, result.album);
+    console.log('result.artist', result.artist, 'result.album', result.album);
+    return createData(result.id, result.name, result.album, result.artist);
   });
 
   return (
