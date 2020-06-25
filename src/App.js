@@ -16,7 +16,6 @@ function App() {
   return (
     <div className='container'>
       <Router>
-        <h1>Spotify Song Suggester</h1>
         <UserContext.Provider
           value={{ userId, setUserId, loginData, setLoginData }}
         >
