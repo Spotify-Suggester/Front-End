@@ -52,7 +52,7 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-function createData(id, name, album, artist, image_url) {
+function createData(id, name, artist, album, image_url) {
   return { id, name, album, artist, image_url };
 }
 
