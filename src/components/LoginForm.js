@@ -8,9 +8,11 @@ import {UserContext} from "../contexts/UserContext";
 
 const formSchema = Yup.object().shape({
   username: Yup.string()
-    .min(3, "Username should be at least 3 characters")
-    .required("Username is a required field"),
-  password: Yup.string().required("Password is a required field"),
+    .min(4, "Username should be a minimum of 4 characters.")
+    .required("Username is a required field."),
+  password: Yup.string()
+    .min(6, "Password should be a minimum of 6 characters.")
+    .required("Password is a required field."),
 });
 
 const LoginForm = (props) => {
@@ -63,7 +65,7 @@ const LoginForm = (props) => {
     });
     validateChange(event);
   };
-  // I will create a function the will handle both login and register submit.
+
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
@@ -90,7 +92,7 @@ const LoginForm = (props) => {
         history.push("/favorites");
       })
       .catch((err) => {
-        setServerError("oops! something's not right!");
+        setServerError("Login failed. Please try again. ");
       });
   };
 
@@ -120,6 +122,7 @@ const LoginForm = (props) => {
           fullWidth
         />
         {errors.password.length > 0 ? <p>{errors.password}</p> : null}
+        {serverError ? <p>{serverError}</p> : null}
       </Box>
       <Box mt={6} mb={5}>
         <Button
