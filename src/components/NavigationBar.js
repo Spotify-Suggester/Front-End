@@ -35,7 +35,7 @@ const NavigationBar = (props) => {
             </Typography>
             <Button size="large" onClick={() => {props.setIsShowing("search")}}>Search Favorites</Button>
             <Button size="large" onClick={() => {props.setIsShowing("mood")}}>Search by Mood</Button>
-            <Button size="large" href="#">About Us</Button>
+            <Button size="large" href="https://quizzical-goodall-28a278.netlify.app/" target="_blanc">About Us</Button>
             <Button size="large">Logout</Button>
             </Toolbar>
         </AppBar>
