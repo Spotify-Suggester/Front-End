@@ -16,8 +16,7 @@ import {
   axiosWithUserAuth,
   axiosWithSpotifyAuth
 } from '../utils/axiosWithAuth';
-import { data } from '../data';
-import GenreListSearch from './GenreListSearch';
+
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -30,6 +29,9 @@ const useStyles = makeStyles(() => ({
     width: '450px',
     minWidth: '450px',
     margin: '0'
+  },
+  mainContainer: {
+   paddingTop: "30px"
   }
 }));
 
@@ -103,8 +105,6 @@ const FavoritesPage = () => {
           ) : (
             <SuggestionList />
           )}
-          {/* 
-          <GenreListSearch /> */}
         </Container>
       </Container>
     </FavoritesContext.Provider>
