@@ -17,7 +17,6 @@ import {
   axiosWithSpotifyAuth
 } from '../utils/axiosWithAuth';
 
-
 const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
@@ -31,7 +30,7 @@ const useStyles = makeStyles(() => ({
     margin: '0'
   },
   mainContainer: {
-   paddingTop: "30px"
+    paddingTop: '30px'
   }
 }));
 
@@ -56,24 +55,30 @@ const FavoritesPage = () => {
 
   const addFavorite = (song) => {
     if (!favorites.includes(song)) {
-      setFavorites([...favorites, song]);
+      // setFavorites([...favorites, song]);
       axiosWithUserAuth()
         .post(
           `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`,
           { song_id: song.id }
         )
-        .then((res) => console.log('post response', res))
+        .then((res) => {
+          console.log('post response', res);
+          setFavorites(res.data.favorite_songs);
+        })
         .catch((err) => console.error('post error', err.message));
     }
   };
 
   const removeFavorite = (song) => {
-    setFavorites(favorites.filter((item) => item.id != song.id));
+    // setFavorites(favorites.filter((item) => item.id != song.id));
     axiosWithUserAuth()
       .delete(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites/${song.id}`
       )
-      .then((res) => console.log('delete response', res))
+      .then((res) => {
+        console.log('delete response', res);
+        setFavorites(res.data.favorite_songs);
+      })
       .catch((err) => console.error('delete error', err));
   };
 

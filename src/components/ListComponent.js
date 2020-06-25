@@ -101,7 +101,6 @@ function ListComponent(props) {
   const classes = useStyle();
 
   const rows = dataList.map((result) => {
-    console.log('result.artist', result.artist, 'result.album', result.album);
     return createData(result.id, result.name, result.album, result.artist);
   });
 
@@ -129,7 +128,7 @@ function ListComponent(props) {
         <TableBody>
           {rows.map((row, index) =>
             props.suggestions ? (
-              <Row key={row} row={row} dataList={dataList} index={index} />
+              <Row key={row.id} row={row} dataList={dataList} index={index} />
             ) : (
               <>
                 <StyledTableRow key={row.id} className={classes.normalRow}>
@@ -191,14 +190,14 @@ const useRowStyles = makeStyles({
 function Row(props) {
   const { row, dataList, index } = props;
   const [open, setOpen] = useState(false);
-  const { favorites, setFavorites, results } = useContext(FavoritesContext);
+  const { addFavorite } = useContext(FavoritesContext);
   const classes = useRowStyles();
 
   return (
     <>
       <StyledTableRow className={classes.collapseRow}>
         <StyledTableCell component='th' scope='row'>
-          <span onClick={() => setFavorites([...favorites, dataList[index]])}>
+          <span onClick={() => addFavorite(dataList[index])}>
             <PlusSign color='#ff6584' />
           </span>
         </StyledTableCell>

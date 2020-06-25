@@ -110,7 +110,6 @@ const SearchForm = () => {
             album: track.album.name
           };
         });
-        console.log('songs', songs);
         setResults(songs);
       })
       .catch((err) => console.error('spotify get req error', err));
@@ -131,7 +130,7 @@ const SearchForm = () => {
           <TextField
             name='search-bar'
             id='search-bar'
-            label='Search your favorites songs or artist'
+            label='Search for your favorite songs or artist'
             fullWidth
             onChange={inputChange}
             value={searchTerm}
