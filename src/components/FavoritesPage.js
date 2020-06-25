@@ -45,13 +45,16 @@ const FavoritesPage = () => {
 
   useEffect(() => {
     console.log('userId', userId);
+    if (!userId) {
+      setUserId(localStorage.getItem('userId'));
+    }
     axiosWithUserAuth()
       .get(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`
       )
       .then((res) => setFavorites(res.data.favorite_songs))
       .catch((err) => console.error('err', err.response));
-  }, []);
+  }, [userId]);
 
   const addFavorite = (song) => {
     if (!favorites.includes(song)) {
