@@ -1,6 +1,6 @@
 // Form that allows user to search for song by title, artist, genre, etc.
 import React, { useState, useContext, useEffect } from 'react';
-import * as yup from 'yup';
+import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { Container, Grid, Box } from '@material-ui/core';
@@ -17,7 +17,14 @@ const useStyles = makeStyles(() => ({
     padding: '0'
   },
   formContainer: {
-    padding: '0px 0 30px'
+    padding: '0px 0 30px',
+
+    '& p': {
+      backgroundColor: '#020215',
+      color: '#FF6584',
+      padding: '.5rem 1rem',
+      fontSize: 14
+    }
   },
   form: {
     display: 'flex',
@@ -60,39 +67,59 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+const formSchema = Yup.object().shape({
+  searchInput: Yup.string().required('Search term is required')
+});
+
 const SearchForm = () => {
   const classes = useStyles();
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState({
+    searchInput: ''
+  });
+  const [error, setError] = useState({
+    searchInput: ''
+  });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const { setResults } = useContext(FavoritesContext);
 
-  // const formSchema = yup.object().shape({
-  //   searchTerm: yup.string().required('Search term is required')
-  // });
+  useEffect(() => {
+    formSchema.isValid(searchTerm).then((valid) => {
+      setIsButtonDisabled(!valid);
+    });
+    console.log('searchTerm', searchTerm);
+  }, [searchTerm]);
 
-  // const validateChange = (e) => {
-  //   yup
-  //     .reach(formSchema, searchTerm)
-  //     .validate(e.target.value)
-  //     .then((valid) => {
-  //       setError('');
-  //     })
-  //     .catch((err) => setError(err.errors[0]));
-  // };
+  const validateChange = (e) => {
+    Yup.reach(formSchema, e.target.name)
+      .validate(e.target.value)
+      .then((valid) => {
+        setError({
+          ...error,
+          [e.target.name]: ''
+        });
+      })
+      .catch((err) => {
+        setError({
+          ...error,
+          [e.target.name]: err.errors[0]
+        });
+      });
+  };
 
-  // useEffect(() => {
-  //   // formSchema.isValid(searchTerm).then((valid) => {
-  //   //   setIsButtonDisabled(!valid);
-  //   // });
-  //   console.log('searchTerm', searchTerm);
-  // }, [searchTerm]);
+  const inputChange = (e) => {
+    e.persist();
+    setSearchTerm({
+      ...searchTerm,
+      [e.target.name]: e.target.value
+    });
+    validateChange(e);
+  };
 
   const formSubmit = (e) => {
     setResults([]);
 
-    const searchString = searchTerm.replace(' ', '%20');
+    const searchString = searchTerm.searchInput.replace(' ', '%20');
 
     e.preventDefault();
     axiosWithSpotifyAuth()
@@ -114,13 +141,9 @@ const SearchForm = () => {
       })
       .catch((err) => console.error('spotify get req error', err));
 
-    setSearchTerm('');
-  };
-
-  const inputChange = (e) => {
-    e.persist();
-    // validateChange(e);
-    setSearchTerm(e.target.value);
+    setSearchTerm({
+      searchInput: ''
+    });
   };
 
   return (
@@ -128,23 +151,24 @@ const SearchForm = () => {
       <Grid item xs={12} md={12} className={classes.formContainer}>
         <Box className={classes.form}>
           <TextField
-            name='search-bar'
-            id='search-bar'
+            name='searchInput'
+            id='searchInput'
             label='Search for your favorite songs or artist'
             fullWidth
             onChange={inputChange}
-            value={searchTerm}
+            value={searchTerm.searchInput}
           />
           <Button
             variant='contained'
             color='secondary'
-            disabled={searchTerm === '' ? true : false}
+            disabled={isButtonDisabled}
             type='submit'
             onClick={formSubmit}
           >
             Search
           </Button>
         </Box>
+        {error.searchInput.length > 0 ? <p class>{error.searchInput}</p> : null}
       </Grid>
     </Container>
   );
