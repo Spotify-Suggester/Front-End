@@ -13,11 +13,12 @@ const useStyles = makeStyles(() => ({
     borderBottom: '1px solid #6c63FF',
     '& .MuiButton-root': {
       backgroundColor: '#ff6584',
-      color: 'white'
+      color: 'white',
+      marginLeft: '20px',
+      '&:hover': {
+        background: '#cc3b58'
+      }
     }
-  },
-  menuButton: {
-    marginRight: '2px'
   },
   title: {
     flexGrow: 1,
@@ -25,9 +26,10 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const NavigationBar = () => {
+const NavigationBar = (props) => {
   const { setUserId } = useContext(UserContext);
   const history = useHistory();
+  const classes = useStyles();
 
   const logout = () => {
     localStorage.clear();
@@ -35,13 +37,35 @@ const NavigationBar = () => {
     history.push('/');
   };
 
-  const classes = useStyles();
   return (
     <AppBar position='fixed' className={classes.bar}>
       <Toolbar>
         <Typography variant='h6' className={classes.title}>
           Spotify Suggestions
         </Typography>
+        <Button
+          size='large'
+          onClick={() => {
+            props.setIsShowing('search');
+          }}
+        >
+          Search by Song/Artist
+        </Button>
+        <Button
+          size='large'
+          onClick={() => {
+            props.setIsShowing('mood');
+          }}
+        >
+          Search by Mood
+        </Button>
+        <Button
+          size='large'
+          href='https://quizzical-goodall-28a278.netlify.app/'
+          target='_blank'
+        >
+          About Us
+        </Button>
         <Button size='large' onClick={logout}>
           Logout
         </Button>

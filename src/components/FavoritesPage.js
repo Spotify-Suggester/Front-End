@@ -1,70 +1,115 @@
-import React, {useState, useEffect, useContext} from "react";
-import axios from "axios";
-import {UserContext} from "../contexts/UserContext";
-import {FavoritesContext} from "../contexts/FavoritesContext";
-import FavoritesList from "./FavoritesList";
-import SearchForm from "./SearchForm";
-import SuggestionForm from "./SuggestionForm";
-import NavigationBar from "./NavigationBar";
-import ListComponent from "./ListComponent";
-import RadarChart from "./RadarChart";
-import Container from "@material-ui/core/Container";
-import {makeStyles} from "@material-ui/core/styles";
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { UserContext } from '../contexts/UserContext';
+import { FavoritesContext } from '../contexts/FavoritesContext';
+import FavoritesList from './FavoritesList';
+import SearchForm from './SearchForm';
+import SuggestionList from './SuggestionList';
+import NavigationBar from './NavigationBar';
+import ListComponent from './ListComponent';
 
-import {axiosWithUserAuth, axiosWithSpotifyAuth} from "../utils/axiosWithAuth";
-import {data} from "../data";
-import GenreListSearch from "./GenreListSearch";
+import SearchMood from './SearchMood';
+import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles';
 
-// api call will be something similar to this
-// const dynamicData = axiosWithSpotifyAuth()
-//   .get('https://api.spotify.com/v1/search?q=tania%20bowra&type=artist')
-//   .then((res) => console.log(res.data))
-//   .catch((err) => console.log(err.message));
+import {
+  axiosWithUserAuth,
+  axiosWithSpotifyAuth
+} from '../utils/axiosWithAuth';
+
 const useStyles = makeStyles(() => ({
   container: {
-    display: "flex",
-    margin: "0",
-    padding: "0",
-    paddingTop: "64px",
+    display: 'flex',
+    margin: '0',
+    padding: '0',
+    paddingTop: '64px'
   },
   emptyContainer: {
-    width: "450px",
-    minWidth: "450px",
-    margin: "0",
+    width: '450px',
+    minWidth: '450px',
+    margin: '0'
   },
+  mainContainer: {
+    paddingTop: '30px'
+  }
 }));
 
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
   const [results, setResults] = useState([]);
-  const {userId, setUserId} = useContext(UserContext);
+  const [suggestions, setSuggestions] = useState([]);
+  const { userId, setUserId } = useContext(UserContext);
+  const [isShowing, setIsShowing] = useState('search');
+
+  const classes = useStyles();
 
   useEffect(() => {
-    console.log("userId", userId);
+    console.log('userId', userId);
     axiosWithUserAuth()
       .get(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`
       )
-      .then((response) => console.log("response", response))
-      .catch((err) => console.error("err", err.response));
+      .then((res) => setFavorites(res.data.favorite_songs))
+      .catch((err) => console.error('err', err.response));
   }, []);
-  const classes = useStyles();
+
+  const addFavorite = (song) => {
+    if (!favorites.includes(song)) {
+      // setFavorites([...favorites, song]);
+      axiosWithUserAuth()
+        .post(
+          `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`,
+          { song_id: song.id }
+        )
+        .then((res) => {
+          console.log('post response', res);
+          setFavorites(res.data.favorite_songs);
+        })
+        .catch((err) => console.error('post error', err.message));
+    }
+  };
+
+  const removeFavorite = (song) => {
+    // setFavorites(favorites.filter((item) => item.id != song.id));
+    axiosWithUserAuth()
+      .delete(
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites/${song.id}`
+      )
+      .then((res) => {
+        console.log('delete response', res);
+        setFavorites(res.data.favorite_songs);
+      })
+      .catch((err) => console.error('delete error', err));
+  };
 
   return (
     <FavoritesContext.Provider
-      value={{favorites, setFavorites, results, setResults}}
+      value={{
+        favorites,
+        setFavorites,
+        results,
+        setResults,
+        suggestions,
+        setSuggestions,
+        addFavorite,
+        removeFavorite
+      }}
     >
-      <Container className={classes.container} maxWidth="full">
-        <NavigationBar />
-        <FavoritesList />
+      <Container className={classes.container} maxWidth='full'>
+        <NavigationBar setIsShowing={setIsShowing} />
+        <FavoritesList setIsShowing={setIsShowing} />
         <Container className={classes.emptyContainer} />
-        <Container>
-          <SearchForm />
-          <ListComponent />
-          <SuggestionForm />
-          <RadarChart />
-          <GenreListSearch />
-          <RadarChart />
+        <Container className={classes.mainContainer}>
+          {isShowing === 'search' ? (
+            <>
+              <SearchForm />
+              <ListComponent />
+            </>
+          ) : isShowing === 'mood' ? (
+            <SearchMood />
+          ) : (
+            <SuggestionList />
+          )}
         </Container>
       </Container>
     </FavoritesContext.Provider>

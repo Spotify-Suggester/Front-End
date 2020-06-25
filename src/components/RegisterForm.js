@@ -73,7 +73,13 @@ const RegisterForm = (props) => {
       })
       .then((response) => {
         console.log("new user created", response.data);
-        history.push("/favorites");
+        history.push("/");
+        alert("Account created - please log in now");
+        setLoginData({
+          username: "",
+          password: "",
+        });
+        props.formSwitch();
       })
       .catch((err) => {
         setServerError("Username already exist. Please choose a new one.");
@@ -156,7 +162,7 @@ const RegisterForm = (props) => {
           fullWidth
           onClick={props.formSwitch}
         >
-          Sign into Spotify
+          Sign In
         </Button>
       </Box>
     </form>

@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
     padding: '0'
   },
   formContainer: {
-    padding: '20px 0 30px'
+    padding: '0px 0 30px'
   },
   form: {
     display: 'flex',
@@ -32,7 +32,10 @@ const useStyles = makeStyles(() => ({
     },
 
     '& .MuiButton-contained': {
-      backgroundColor: '#6C63FF'
+      backgroundColor: '#6C63FF',
+      '&:hover': {
+        background: '#4a41d4'
+      }
     },
 
     '& .MuiInput-underline:before': {
@@ -79,12 +82,12 @@ const SearchForm = () => {
   //     .catch((err) => setError(err.errors[0]));
   // };
 
-  useEffect(() => {
-    // formSchema.isValid(searchTerm).then((valid) => {
-    //   setIsButtonDisabled(!valid);
-    // });
-    console.log('searchTerm', searchTerm);
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   // formSchema.isValid(searchTerm).then((valid) => {
+  //   //   setIsButtonDisabled(!valid);
+  //   // });
+  //   console.log('searchTerm', searchTerm);
+  // }, [searchTerm]);
 
   const formSubmit = (e) => {
     setResults([]);
@@ -98,7 +101,16 @@ const SearchForm = () => {
       )
       .then((res) => {
         console.log('spotify get req', res.data.tracks.items);
-        setResults(res.data.tracks.items);
+        const data = res.data.tracks.items;
+        const songs = data.map((track) => {
+          return {
+            id: track.id,
+            name: track.name,
+            artist: track.artists[0].name,
+            album: track.album.name
+          };
+        });
+        setResults(songs);
       })
       .catch((err) => console.error('spotify get req error', err));
 
@@ -118,7 +130,7 @@ const SearchForm = () => {
           <TextField
             name='search-bar'
             id='search-bar'
-            label='Search for your favorite songs'
+            label='Search for your favorite songs or artist'
             fullWidth
             onChange={inputChange}
             value={searchTerm}
@@ -135,15 +147,6 @@ const SearchForm = () => {
         </Box>
       </Grid>
     </Container>
-
-    // <>
-    //   <form>
-    //
-    //     <Button variant='contained' color='secondary'>
-    //       Search
-    //     </Button>
-    //   </form>
-    // </>
   );
 };
 
