@@ -5,17 +5,6 @@ import { useHistory } from 'react-router-dom';
 import { TextField, Box, Button, Divider, Grid } from '@material-ui/core';
 import { UserContext } from '../contexts/UserContext';
 
-const formSchema = Yup.object().shape({
-  username: Yup.string()
-    .min(3, 'Username should be at least 3 characters')
-    .required('Username is a required field'),
-  password: Yup.string().required('Password is a required field'),
-  confirmPassword: Yup.string().oneOf(
-    [Yup.ref('password'), null],
-    'Passwords must match'
-  )
-});
-
 const RegisterForm = (props) => {
   const history = useHistory();
 
@@ -29,6 +18,18 @@ const RegisterForm = (props) => {
     username: '',
     password: '',
     confirmPassword: ''
+  });
+
+  let regex = new RegExp('^' + loginData.password + '$');
+
+  const formSchema = Yup.object().shape({
+    username: Yup.string()
+      .min(4, 'Username should be a minimum of 4 characters.')
+      .required('Username is a required field'),
+    password: Yup.string()
+      .min(6, 'Password should be a minimum of 6 characters.')
+      .required('Password is a required field'),
+    confirmPassword: Yup.string().matches(regex, 'Passwords must match')
   });
 
   useEffect(() => {
@@ -72,40 +73,21 @@ const RegisterForm = (props) => {
       })
       .then((response) => {
         console.log('new user created', response.data);
-      })
-      .catch((err) => {
-        setServerError("oops! something's not right!");
-      });
-
-    axios
-      .post('https://spotify-suggester1.herokuapp.com/api/auth/login', {
-        username: loginData.username,
-        password: loginData.password
-      })
-      .then((response) => {
-        console.log('response', response);
-        setUserId(response.data.auth.id);
-        localStorage.setItem('token', response.data.auth.token);
-        localStorage.setItem(
-          'access_token',
-          response.data.spotify.access_token
-        );
-
+        history.push('/');
+        alert('Account created - please log in now');
         setLoginData({
           username: '',
-          password: '',
-          confirmPassword: ''
+          password: ''
         });
-
-        setServerError(null);
-
-        history.push('/favorites');
+        props.formSwitch();
       })
-      .catch();
+      .catch((err) => {
+        setServerError('Username already exist. Please choose a new one.');
+      });
   };
 
   return (
-    <form autoComplete='off' onSubmit={handleSubmit}>
+    <form autoComplete='on' onSubmit={handleSubmit}>
       <h3>Create Account</h3>
       <Box mt={2}>
         <TextField
@@ -117,7 +99,7 @@ const RegisterForm = (props) => {
           fullWidth
         />
 
-        {errors.username > 0 ? <p>{errors.username}</p> : null}
+        {errors.username.length > 0 ? <p>{errors.username}</p> : null}
       </Box>
       <Box mt={2} color='text.primary'>
         <TextField
@@ -146,6 +128,7 @@ const RegisterForm = (props) => {
         {errors.confirmPassword.length > 0 ? (
           <p>{errors.confirmPassword}</p>
         ) : null}
+        {serverError ? <p>{serverError}</p> : null}
       </Box>
       <Box mt={6} mb={5}>
         <Button
@@ -179,7 +162,7 @@ const RegisterForm = (props) => {
           fullWidth
           onClick={props.formSwitch}
         >
-          Sign into Spotify
+          Sign In
         </Button>
       </Box>
     </form>

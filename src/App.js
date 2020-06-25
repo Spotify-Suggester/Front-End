@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { UserContext } from './contexts/UserContext';
 import Login from './components/Login';
 import PrivateRoute from './components/PrivateRoute';
@@ -16,12 +16,13 @@ function App() {
   return (
     <div className='container'>
       <Router>
-        <h1>Spotify Song Suggester</h1>
         <UserContext.Provider
           value={{ userId, setUserId, loginData, setLoginData }}
         >
-          <Route exact path='/' component={Login} />
-          <PrivateRoute path='/favorites' component={FavoritesPage} />
+          <Switch>
+            <PrivateRoute path='/favorites' component={FavoritesPage} />
+            <Route path='/' component={Login} />
+          </Switch>
         </UserContext.Provider>
       </Router>
     </div>

@@ -62,7 +62,7 @@ const RadarChart = () => {
               options={chartConfig.options}
               series={chartConfig.series}
               type="radar"
-              width="700"
+              width="600"
             />
     )
 }
