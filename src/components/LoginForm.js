@@ -97,7 +97,7 @@ const LoginForm = (props) => {
   };
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit}>
+    <form autoComplete="on" onSubmit={handleSubmit}>
       <h3>Login</h3>
       <Box mt={2}>
         <TextField
