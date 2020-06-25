@@ -64,7 +64,7 @@ const SearchForm = () => {
           <TextField
             name='search-bar'
             id='search-bar'
-            label='Search your favorites songs'
+            label='Search your favorites songs or artist'
             fullWidth
           />
           <Button variant='contained' color='secondary'>

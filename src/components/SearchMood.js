@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import ListComponent from './ListComponent';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -20,6 +20,7 @@ const useStyle = makeStyles(() => ({
         "& .MuiButton-root": {
             backgroundColor: "#6C63FF",
             color: "white",
+            maxHeight: "50px",
             marginLeft: "20px",
             width: "150px",
             "&:hover": {
@@ -33,22 +34,62 @@ const useStyle = makeStyles(() => ({
     box: {
         display: "flex",
         flexDirection: "column",
-        width: "10%",
-        margin: "0 30px"
+        width: "20%",
+        margin: "0 15px"
     }
 }))
 
-const features = ["danceability", "energy", "mode", "speechiness", "instrumentalness", "liveness", "valence"];
 
 const SearchMood = () => {
     const classes = useStyle();
+    const [features, setFeatures] = useState([
+        {
+            feature: "danceability",
+            value: 0,
+        },
+        {
+            feature: "energy",
+            value: 0,
+        },
+        {
+            feature: "instrumentalness",
+            value: 0,
+        },
+        {
+            feature: "liveness",
+            value: 0,
+        },
+        {
+            feature: "loudness",
+            value: 0,
+        },
+        {
+            feature: "speechiness",
+            value: 0,
+        },
+        {
+            feature: "valence",
+            value: 0,
+        },
+        {
+            feature: "tempo",
+            value: 0,
+        },
+    ])
+
+    const handleChange = (index, value) => {
+        let array = features
+        array[index].value = value
+        setFeatures(array)
+    }
+
     return (
         <>
         <Paper className={classes.paper} square>
-            {features.map((features) => (
+            {features.map((features, index) => (
                 <Box className={classes.box}>
                     <Typography id="discrete-slider" gutterBottom>
-                        {features}
+                        {features.feature}
                     </Typography>
                     <Slider
                         defaultValue={0}
@@ -58,10 +99,7 @@ const SearchMood = () => {
                         marks
                         min={0}
                         max={1}
-                        onChangeCommitted={(e) => {
-                            console.log(e.target.getAttribute("aria-valuenow"));
-                            
-                        }}
+                        onChangeCommitted={(e, val) => {handleChange(index, val)}}
                     />
                 </Box>
             ))}
