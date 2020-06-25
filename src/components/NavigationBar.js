@@ -49,7 +49,7 @@ const NavigationBar = (props) => {
             props.setIsShowing('search');
           }}
         >
-          Search Favorites
+          Search by Song/Artist
         </Button>
         <Button
           size='large'

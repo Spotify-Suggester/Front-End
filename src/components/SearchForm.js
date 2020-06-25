@@ -1,98 +1,122 @@
 // Form that allows user to search for song by title, artist, genre, etc.
-import React, { useState, useContext, useEffect } from 'react';
-import * as yup from 'yup';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import { Container, Grid, Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  axiosWithUserAuth,
-  axiosWithSpotifyAuth
-} from '../utils/axiosWithAuth';
-import { FavoritesContext } from '../contexts/FavoritesContext';
+import React, {useState, useContext, useEffect} from "react";
+import * as Yup from "yup";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import {Container, Grid, Box} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import {axiosWithUserAuth, axiosWithSpotifyAuth} from "../utils/axiosWithAuth";
+import {FavoritesContext} from "../contexts/FavoritesContext";
 
 const useStyles = makeStyles(() => ({
   container: {
-    margin: '0',
-    padding: '0'
+    margin: "0",
+    padding: "0",
   },
   formContainer: {
-    padding: '0px 0 30px'
+    padding: "0px 0 30px",
+
+    "& p": {
+      backgroundColor: "#020215",
+      color: "#FF6584",
+      padding: ".5rem 1rem",
+      fontSize: 14,
+    },
   },
   form: {
-    display: 'flex',
-    position: 'relative',
-    width: '100%',
-    color: 'white',
-    '& .MuiFormControl-fullWidth': {
-      marginRight: '10px'
+    display: "flex",
+    position: "relative",
+    width: "100%",
+    color: "white",
+    "& .MuiFormControl-fullWidth": {
+      marginRight: "10px",
     },
-    '& label, & input, & .MuiButton-contained': {
-      color: 'white'
-    },
-
-    '& .MuiButton-contained': {
-      backgroundColor: '#6C63FF',
-      '&:hover': {
-        background: '#4a41d4'
-      }
+    "& label, & input, & .MuiButton-contained": {
+      color: "white",
     },
 
-    '& .MuiInput-underline:before': {
-      borderBottomColor: 'rgba(255, 255, 255, 0.7) !important;'
+    "& .MuiButton-contained": {
+      backgroundColor: "#6C63FF",
+      "&:hover": {
+        background: "#4a41d4",
+      },
     },
 
-    '& .MuiFormLabel-root.Mui-focused': {
-      color: '#6C63FF !important'
+    "& .MuiInput-underline:before": {
+      borderBottomColor: "rgba(255, 255, 255, 0.7) !important;",
     },
 
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#6C63FF !important'
+    "& .MuiFormLabel-root.Mui-focused": {
+      color: "#6C63FF !important",
     },
 
-    '& .MuiButton-contained.Mui-disabled': {
-      color: 'rgba(0, 0, 0, .45)'
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "#6C63FF !important",
     },
 
-    '& .MuiDivider-root': {
-      backgroundColor: 'rgba(255,255,255,0.7)'
-    }
-  }
+    "& .MuiButton-contained.Mui-disabled": {
+      color: "rgba(0, 0, 0, .45)",
+    },
+
+    "& .MuiDivider-root": {
+      backgroundColor: "rgba(255,255,255,0.7)",
+    },
+  },
 }));
+
+const formSchema = Yup.object().shape({
+  searchInput: Yup.string().required("Search term is required"),
+});
 
 const SearchForm = () => {
   const classes = useStyles();
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState({
+    searchInput: "",
+  });
+  const [error, setError] = useState({
+    searchInput: "",
+  });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const { setResults } = useContext(FavoritesContext);
+  const {setResults} = useContext(FavoritesContext);
 
-  // const formSchema = yup.object().shape({
-  //   searchTerm: yup.string().required('Search term is required')
-  // });
+  useEffect(() => {
+    formSchema.isValid(searchTerm).then((valid) => {
+      setIsButtonDisabled(!valid);
+    });
+    console.log("searchTerm", searchTerm);
+  }, [searchTerm]);
 
-  // const validateChange = (e) => {
-  //   yup
-  //     .reach(formSchema, searchTerm)
-  //     .validate(e.target.value)
-  //     .then((valid) => {
-  //       setError('');
-  //     })
-  //     .catch((err) => setError(err.errors[0]));
-  // };
+  const validateChange = (e) => {
+    Yup.reach(formSchema, e.target.name)
+      .validate(e.target.value)
+      .then((valid) => {
+        setError({
+          ...error,
+          [e.target.name]: "",
+        });
+      })
+      .catch((err) => {
+        setError({
+          ...error,
+          [e.target.name]: err.errors[0],
+        });
+      });
+  };
 
-  // useEffect(() => {
-  //   // formSchema.isValid(searchTerm).then((valid) => {
-  //   //   setIsButtonDisabled(!valid);
-  //   // });
-  //   console.log('searchTerm', searchTerm);
-  // }, [searchTerm]);
+  const inputChange = (e) => {
+    e.persist();
+    setSearchTerm({
+      ...searchTerm,
+      [e.target.name]: e.target.value,
+    });
+    validateChange(e);
+  };
 
   const formSubmit = (e) => {
     setResults([]);
 
-    const searchString = searchTerm.replace(' ', '%20');
+    const searchString = searchTerm.searchInput.replace(" ", "%20");
 
     e.preventDefault();
     axiosWithSpotifyAuth()
@@ -100,27 +124,23 @@ const SearchForm = () => {
         `https://api.spotify.com/v1/search?q=${searchString}&type=track%2Cartist&market=US&limit=10&offset=5`
       )
       .then((res) => {
-        console.log('spotify get req', res.data.tracks.items);
+        console.log("spotify get req", res.data.tracks.items);
         const data = res.data.tracks.items;
         const songs = data.map((track) => {
           return {
             id: track.id,
             name: track.name,
             artist: track.artists[0].name,
-            album: track.album.name
+            album: track.album.name,
           };
         });
         setResults(songs);
       })
-      .catch((err) => console.error('spotify get req error', err));
+      .catch((err) => console.error("spotify get req error", err));
 
-    setSearchTerm('');
-  };
-
-  const inputChange = (e) => {
-    e.persist();
-    // validateChange(e);
-    setSearchTerm(e.target.value);
+    setSearchTerm({
+      searchInput: "",
+    });
   };
 
   return (
@@ -128,23 +148,24 @@ const SearchForm = () => {
       <Grid item xs={12} md={12} className={classes.formContainer}>
         <Box className={classes.form}>
           <TextField
-            name='search-bar'
-            id='search-bar'
-            label='Search for your favorite songs or artist'
+            name="searchInput"
+            id="searchInput"
+            label="Search for your favorite songs or artist"
             fullWidth
             onChange={inputChange}
-            value={searchTerm}
+            value={searchTerm.searchInput}
           />
           <Button
-            variant='contained'
-            color='secondary'
-            disabled={searchTerm === '' ? true : false}
-            type='submit'
+            variant="contained"
+            color="secondary"
+            disabled={isButtonDisabled}
+            type="submit"
             onClick={formSubmit}
           >
             Search
           </Button>
         </Box>
+        {error.searchInput.length > 0 ? <p class>{error.searchInput}</p> : null}
       </Grid>
     </Container>
   );
