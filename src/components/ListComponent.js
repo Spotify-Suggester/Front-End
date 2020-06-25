@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FavoritesContext } from '../contexts/FavoritesContext';
 import { UserContext } from '../contexts/UserContext';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
@@ -85,7 +85,14 @@ function ListComponent(props) {
     results,
     suggestions
   } = useContext(FavoritesContext);
-  const { userId } = useContext(UserContext);
+
+  const { userId, setUserId } = useContext(UserContext);
+
+  useEffect(() => {
+    if (!userId) {
+      setUserId(localStorage.getItem('userId'));
+    }
+  });
 
   let dataList = [];
   if (props.type === 'favorite') {
