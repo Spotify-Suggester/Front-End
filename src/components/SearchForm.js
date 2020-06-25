@@ -79,12 +79,12 @@ const SearchForm = () => {
   //     .catch((err) => setError(err.errors[0]));
   // };
 
-  useEffect(() => {
-    // formSchema.isValid(searchTerm).then((valid) => {
-    //   setIsButtonDisabled(!valid);
-    // });
-    console.log('searchTerm', searchTerm);
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   // formSchema.isValid(searchTerm).then((valid) => {
+  //   //   setIsButtonDisabled(!valid);
+  //   // });
+  //   console.log('searchTerm', searchTerm);
+  // }, [searchTerm]);
 
   const formSubmit = (e) => {
     setResults([]);
@@ -145,15 +145,6 @@ const SearchForm = () => {
         </Box>
       </Grid>
     </Container>
-
-    // <>
-    //   <form>
-    //
-    //     <Button variant='contained' color='secondary'>
-    //       Search
-    //     </Button>
-    //   </form>
-    // </>
   );
 };
 
