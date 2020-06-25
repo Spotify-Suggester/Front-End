@@ -334,10 +334,12 @@ function Row(props) {
                           secondary={
                             <>
                               <span className='song'>
-                                {dataList[index][el]}
+                                {dataList[index][el].toFixed(3)}
                               </span>
                               <span className='total'>
-                                {favAverages[i].value.toFixed(3)}
+                                {favAverages[i].value === 0
+                                  ? 0
+                                  : favAverages[i].value.toFixed(3)}
                               </span>
                             </>
                           }

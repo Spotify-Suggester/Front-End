@@ -70,10 +70,7 @@ const FavoritesPage = () => {
         feature: 'energy',
         value: 0
       },
-      {
-        feature: 'instrumentalness',
-        value: 0
-      },
+
       {
         feature: 'liveness',
         value: 0
@@ -92,6 +89,10 @@ const FavoritesPage = () => {
       },
       {
         feature: 'tempo',
+        value: 0
+      },
+      {
+        feature: 'instrumentalness',
         value: 0
       }
     ];
