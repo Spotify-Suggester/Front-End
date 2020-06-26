@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -10,6 +10,7 @@ import {
   Grid,
   CircularProgress
 } from '@material-ui/core';
+
 import { UserContext } from '../contexts/UserContext';
 import { LoginContext } from '../contexts/LoginContext';
 

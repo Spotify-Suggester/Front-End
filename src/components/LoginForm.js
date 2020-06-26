@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -77,7 +77,6 @@ const LoginForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     setIsLoading(true);
 
     axios

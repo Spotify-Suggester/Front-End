@@ -103,6 +103,12 @@ const Login = () => {
   const [registerForm, setRegisterForm] = useState(false);
 
   const formSwitch = () => {
+    setLoginData({
+      username: '',
+      password: '',
+      confirmPassword: ''
+    });
+
     if (loginForm) {
       setLoginForm(false);
       setRegisterForm(true);
