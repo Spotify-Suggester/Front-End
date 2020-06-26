@@ -7,6 +7,7 @@ import FavoritesPage from './components/FavoritesPage';
 
 function App() {
   const [userId, setUserId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [loginData, setLoginData] = useState({
     username: '',
     password: '',
@@ -21,7 +22,9 @@ function App() {
             userId,
             setUserId,
             loginData,
-            setLoginData
+            setLoginData,
+            isLoading,
+            setIsLoading
           }}
         >
           <Switch>

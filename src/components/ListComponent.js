@@ -92,6 +92,23 @@ const useStyle = makeStyles(() => ({
       backgroundColor: "rgba(0,0,0,.45)",
     },
   },
+  paginationBar: {
+    display: "flex",
+    paddingTop: "10px",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    "& p": {
+      fontSize: "14px",
+      lineHeight: 0.6,
+    },
+    "& svg:hover path": {
+      cursor: "pointer",
+      fill: "#4a41d4",
+    },
+    "& div:hover": {
+      cursor: "pointer",
+    },
+  },
 }));
 
 function ListComponent(props) {
@@ -145,96 +162,105 @@ function ListComponent(props) {
   });
 
   return (
-    <TableContainer
-      className={props.type === "favorite" ? classes.container : classes.normal}
-    >
-      <Table stickyHeader aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell></StyledTableCell>
+    <>
+      <TableContainer
+        className={
+          props.type === "favorite" ? classes.container : classes.normal
+        }
+      >
+        <Table stickyHeader aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell></StyledTableCell>
 
-            <StyledTableCell>Song Name</StyledTableCell>
-            {props.type !== "favorite" ? (
-              <>
-                <StyledTableCell align="right">Artist</StyledTableCell>
-                <StyledTableCell align="right">Album</StyledTableCell>
-                {props.type === "suggestions" ? (
-                  <StyledTableCell></StyledTableCell>
-                ) : (
-                  ""
-                )}
-              </>
-            ) : (
-              ""
-            )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row, index) =>
-            props.type === "suggestions" ? (
-              <Row key={row.id} row={row} dataList={dataList} index={index} />
-            ) : (
-              <>
-                <StyledTableRow key={row.id} className={classes.normalRow}>
-                  <StyledTableCell component="th" scope="row">
-                    {props.type !== "favorite" ? (
-                      <span
-                        onClick={() => {
-                          addFavorite(dataList[index]);
-                        }}
-                      >
-                        <PlusSign color="#ff6584" />
-                      </span>
-                    ) : (
-                      <span onClick={() => removeFavorite(row)}>
-                        <MinusSign color="#ff6584" />
-                      </span>
-                    )}
-                  </StyledTableCell>
-                  <StyledTableCell component="th" scope="row">
-                    {row.name}
-                  </StyledTableCell>
-                  {props.type !== "favorite" ? (
-                    <>
-                      <StyledTableCell align="right">
-                        {row.artist}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.album}
-                      </StyledTableCell>
-                    </>
+              <StyledTableCell>Song Name</StyledTableCell>
+              {props.type !== "favorite" ? (
+                <>
+                  <StyledTableCell align="right">Artist</StyledTableCell>
+                  <StyledTableCell align="right">Album</StyledTableCell>
+                  {props.type === "suggestions" ? (
+                    <StyledTableCell></StyledTableCell>
                   ) : (
                     ""
                   )}
-                </StyledTableRow>
-              </>
-            )
-          )}
-          {toShow.length != 0 &&
-          props.type != "favorite" &&
-          props.type != "suggestions" ? (
-            <div style={{color: "white"}}>
-              <div
-                onClick={() => {
-                  changePage("back");
-                }}
-              >
-                <NextButton>Back</NextButton>
-              </div>{" "}
-              <div
-                onClick={() => {
-                  changePage("next");
-                }}
-              >
-                <PrevButton>Next</PrevButton>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                </>
+              ) : (
+                ""
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) =>
+              props.type === "suggestions" ? (
+                <Row key={row.id} row={row} dataList={dataList} index={index} />
+              ) : (
+                <>
+                  <StyledTableRow key={row.id} className={classes.normalRow}>
+                    <StyledTableCell component="th" scope="row">
+                      {props.type !== "favorite" ? (
+                        <span
+                          onClick={() => {
+                            addFavorite(dataList[index]);
+                          }}
+                        >
+                          <PlusSign color="#ff6584" />
+                        </span>
+                      ) : (
+                        <span onClick={() => removeFavorite(row)}>
+                          <MinusSign color="#ff6584" />
+                        </span>
+                      )}
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+                      {row.name}
+                    </StyledTableCell>
+                    {props.type !== "favorite" ? (
+                      <>
+                        <StyledTableCell align="right">
+                          {row.artist}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          {row.album}
+                        </StyledTableCell>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </StyledTableRow>
+                </>
+              )
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {toShow.length != 0 &&
+      props.type != "favorite" &&
+      props.type != "suggestions" ? (
+        <div className={classes.paginationBar}>
+          <div
+            onClick={() => {
+              changePage("next");
+            }}
+          >
+            <PrevButton size="40px" color="#6C63FF">
+              Next
+            </PrevButton>
+          </div>
+          <p>{`Page ${page + 1} of ${Math.ceil(results.length / 10)}`}</p>
+          <div
+            onClick={() => {
+              changePage("back");
+            }}
+          >
+            <NextButton size="40px" color="#6C63FF">
+              Back
+            </NextButton>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+    </>
   );
 }
 
@@ -321,7 +347,7 @@ function Row(props) {
     "loudness",
     "speechiness",
     "valence",
-    "tempo",
+    "acousticness",
     "instrumentalness",
   ];
 

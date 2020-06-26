@@ -6,7 +6,6 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import ListComponent from './ListComponent';
 import Button from '@material-ui/core/Button';
-import zIndex from '@material-ui/core/styles/zIndex';
 import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 
 const useStyles = makeStyles(() => ({
@@ -40,15 +39,24 @@ const useStyles = makeStyles(() => ({
 }));
 const FavoritesList = (props) => {
   const classes = useStyles();
-  const { favorites, setFavorites, setSuggestions } = useContext(
+  const { favorites, setSuggestions } = useContext(
     FavoritesContext
   );
   const { userId } = useContext(UserContext);
 
   const getSuggestions = () => {
     axiosWithUserAuth()
-      .get(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`
+      .post(
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`, {
+          "danceability": null,
+          "energy": null,
+          "instrumentalness": null,
+          "liveness": null,
+          "acousticness": null,
+          "loudness": null,
+          "speechiness": null,
+          "valence": null,
+          "tempo": null}
       )
       .then((res) => {
         console.log('get res', res);
@@ -62,7 +70,7 @@ const FavoritesList = (props) => {
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
       <Button
-        disabled={favorites.length <= 5? true: false}
+        disabled={favorites.length < 5? true: false}
         variant='contained'
         size='large'
         onClick={() => {
@@ -70,7 +78,7 @@ const FavoritesList = (props) => {
           getSuggestions();
         }}
       >
-        { favorites.length <= 5 ? `Please add ${5 - favorites.length} more Favorites` : 'Suggest Songs'}
+        { favorites.length < 5 ? `Please add ${5 - favorites.length} more ${(5 - favorites.length) === 1 ? 'Favorite' : 'Favorites'}` : 'Suggest Songs'}
       </Button>
     </Container>
   );

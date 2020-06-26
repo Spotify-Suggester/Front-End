@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {Container, Grid, Box} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {axiosWithUserAuth, axiosWithSpotifyAuth} from "../utils/axiosWithAuth";
+import {axiosWithSpotifyAuth} from "../utils/axiosWithAuth";
 import {FavoritesContext} from "../contexts/FavoritesContext";
 
 const useStyles = makeStyles(() => ({

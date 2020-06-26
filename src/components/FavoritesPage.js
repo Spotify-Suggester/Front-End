@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+
 import { UserContext } from '../contexts/UserContext';
 import { FavoritesContext } from '../contexts/FavoritesContext';
 import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
-import SuggestionList from './SuggestionList';
 import NavigationBar from './NavigationBar';
 import ListComponent from './ListComponent';
 
-import SearchMood from './SearchMood';
+import Suggestions from './Suggestions';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 
 import {
   axiosWithUserAuth,
-  axiosWithSpotifyAuth
 } from '../utils/axiosWithAuth';
 
 const useStyles = makeStyles(() => ({
@@ -54,7 +52,6 @@ const FavoritesPage = () => {
       )
       .then((res) => {
         setFavorites(res.data.favorite_songs);
-        // calcAverages(res.data.favorite_songs);
       })
       .catch((err) => console.error('err', err.response));
   }, [userId]);
@@ -91,7 +88,7 @@ const FavoritesPage = () => {
         value: 0
       },
       {
-        feature: 'tempo',
+        feature: 'acousticness',
         value: 0
       },
       {
@@ -162,7 +159,7 @@ const FavoritesPage = () => {
               <ListComponent />
             </>
           ) : (
-            <SuggestionList />
+            <Suggestions />
           )}
         </Container>
       </Container>
