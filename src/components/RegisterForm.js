@@ -37,7 +37,7 @@ const RegisterForm = (props) => {
     formSchema.isValid(loginData).then((valid) => {
       setButtonDisabled(!valid);
     });
-  }, [loginData]);
+  }, [loginData, formSchema]);
 
   const validateChange = (event) => {
     Yup.reach(formSchema, event.target.name)

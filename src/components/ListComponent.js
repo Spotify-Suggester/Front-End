@@ -330,7 +330,7 @@ function Row(props) {
     'loudness',
     'speechiness',
     'valence',
-    'tempo',
+    'acousticness',
     'instrumentalness'
   ];
 

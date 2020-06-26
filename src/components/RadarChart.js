@@ -17,14 +17,8 @@ useEffect(() => {
   const tempSongSerie = []
   const tempAveSerie = []
   features.forEach( (el, index) => {
-    if(el === "tempo") {
-      tempSongSerie.push((songData[el]/20).toFixed(3))
-      tempAveSerie.push((averages[index].value/20).toFixed(3))
-    } else {
       tempSongSerie.push(songData[el].toFixed(3))
       tempAveSerie.push(averages[index].value.toFixed(3))
-    }
-    
   })
   setAveSerie(tempAveSerie)
   setSongSerie(tempSongSerie)

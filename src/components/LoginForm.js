@@ -38,7 +38,7 @@ const LoginForm = (props) => {
   const [serverError, setServerError] = useState('');
 
 
-  const { userId, setUserId, isLoading, setIsLoading} = useContext(UserContext);
+  const { setUserId, isLoading, setIsLoading} = useContext(UserContext);
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
 

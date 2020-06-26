@@ -6,7 +6,6 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import ListComponent from './ListComponent';
 import Button from '@material-ui/core/Button';
-import zIndex from '@material-ui/core/styles/zIndex';
 import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 
 const useStyles = makeStyles(() => ({
@@ -40,7 +39,7 @@ const useStyles = makeStyles(() => ({
 }));
 const FavoritesList = (props) => {
   const classes = useStyles();
-  const { favorites, setFavorites, setSuggestions } = useContext(
+  const { favorites, setSuggestions } = useContext(
     FavoritesContext
   );
   const { userId } = useContext(UserContext);
@@ -49,15 +48,15 @@ const FavoritesList = (props) => {
     axiosWithUserAuth()
       .post(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`, {
-          "danceability":0,
-          "energy":0,
-          "instrumentalness":0,
-          "liveness":0,
-          "acousticness":0,
-          "loudness":0,
-          "speechiness":0,
-          "valence":0,
-          "tempo":0}
+          "danceability": null,
+          "energy": null,
+          "instrumentalness": null,
+          "liveness": null,
+          "acousticness": null,
+          "loudness": null,
+          "speechiness": null,
+          "valence": null,
+          "tempo": null}
       )
       .then((res) => {
         console.log('get res', res);

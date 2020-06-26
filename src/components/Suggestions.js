@@ -82,10 +82,10 @@ const Suggestions = () => {
     },
     {
       feature: 'loudness',
-      value: 0,
+      value: -60,
       max: 0,
-      min: -16,
-      steps: 1
+      min: -60,
+      steps: 5
     },
     {
       feature: 'speechiness',
@@ -140,7 +140,7 @@ const Suggestions = () => {
               {features.feature}
             </Typography>
             <Slider
-              defaultValue={0}
+              defaultValue={features.value}
               aria-labelledby='discrete-slider'
               valueLabelDisplay='auto'
               step={features.steps}
