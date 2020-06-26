@@ -1,12 +1,13 @@
-// will iterate through array of user's favorite songs and render each Favorite
 import React, { useContext } from 'react';
-import { FavoritesContext } from '../contexts/FavoritesContext';
-import { UserContext } from '../contexts/UserContext';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import ListComponent from './ListComponent';
 import Button from '@material-ui/core/Button';
+
+import ListComponent from './ListComponent';
 import { axiosWithUserAuth } from '../utils/axiosWithAuth';
+
+import { UserContext } from '../contexts/UserContext';
+import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -37,29 +38,30 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center'
   }
 }));
-const FavoritesList = (props) => {
+
+const FavoritesList = ({ setIsShowing }) => {
   const classes = useStyles();
-  const { favorites, setSuggestions } = useContext(
-    FavoritesContext
-  );
+
   const { userId } = useContext(UserContext);
+  const { favorites, setSuggestions } = useContext(FavoritesContext);
 
   const getSuggestions = () => {
     axiosWithUserAuth()
       .post(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`, {
-          "danceability": null,
-          "energy": null,
-          "instrumentalness": null,
-          "liveness": null,
-          "acousticness": null,
-          "loudness": null,
-          "speechiness": null,
-          "valence": null,
-          "tempo": null}
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,
+        {
+          danceability: 0,
+          energy: 0,
+          instrumentalness: 0,
+          liveness: 0,
+          acousticness: 0,
+          loudness: 0,
+          speechiness: 0,
+          valence: 0,
+          tempo: 0
+        }
       )
       .then((res) => {
-        console.log('get res', res);
         setSuggestions(res.data.recommended_songs);
       })
       .catch((err) => console.error('get err', err.message));
@@ -70,15 +72,19 @@ const FavoritesList = (props) => {
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
       <Button
-        disabled={favorites.length < 5? true: false}
+        disabled={favorites.length < 5 ? true : false}
         variant='contained'
         size='large'
         onClick={() => {
-          props.setIsShowing('suggestions');
+          setIsShowing('suggestions');
           getSuggestions();
         }}
       >
-        { favorites.length < 5 ? `Please add ${5 - favorites.length} more ${(5 - favorites.length) === 1 ? 'Favorite' : 'Favorites'}` : 'Suggest Songs'}
+        {favorites.length < 5
+          ? `Please add ${5 - favorites.length} more ${
+              5 - favorites.length === 1 ? 'Favorite' : 'Favorites'
+            }`
+          : 'Suggest Songs'}
       </Button>
     </Container>
   );

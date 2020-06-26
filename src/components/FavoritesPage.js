@@ -36,7 +36,9 @@ const FavoritesPage = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [isShowing, setIsShowing] = useState('search');
   const [page, setPage] = useState(0);
+
   const { userId, setUserId } = useContext(UserContext);
+
   const classes = useStyles();
 
   useEffect(() => {
