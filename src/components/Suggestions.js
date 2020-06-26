@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
-import Box from '@material-ui/core/Box';
+import { Container, Grid, Box } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -15,8 +15,11 @@ import { UserContext } from '../contexts/UserContext';
 const useStyle = makeStyles(() => ({
   paper: {
     display: 'flex',
-    padding: '40px 20px 10px',
-    margin: '-50px -40px 30px',
+    flexWrap: 'wrap',
+    margin: "-30px 0 20px",
+    padding: " 20px 10px 0px",
+    position: 'relative',
+    width: "100%",
     color: 'white',
     border: '1px solid #6c63FF',
     background: 'rgba(0,0,0,.45)',
@@ -24,8 +27,8 @@ const useStyle = makeStyles(() => ({
       backgroundColor: '#6C63FF',
       color: 'white',
       maxHeight: '50px',
-      marginLeft: '20px',
-      width: '150px',
+      margin: "-5px 2%",
+      width: '16%',
       '&:hover': {
         background: '#4a41d4'
       }
@@ -37,9 +40,17 @@ const useStyle = makeStyles(() => ({
   box: {
     display: 'flex',
     flexDirection: 'column',
-    width: '20%',
-    margin: '0 15px'
-  }
+    margin: '0 2% 15px',
+    width: "16%",
+    "& p": {
+      marginBottom: "-5px"
+    }
+  },
+  container: {
+    margin: '0',
+    padding: '0',
+    width: "100%"
+  },
 }));
 
 const Suggestions = () => {
@@ -137,31 +148,34 @@ const Suggestions = () => {
 
   return (
     <>
-      <Paper className={classes.paper} square>
-        {features.map((features, index) => (
-          <Box className={classes.box}>
-            <Typography id='discrete-slider' gutterBottom>
-              {features.feature}
-            </Typography>
-            <Slider
-              defaultValue={features.value}
-              aria-labelledby='discrete-slider'
-              valueLabelDisplay='auto'
-              step={features.steps}
-              marks
-              min={features.min}
-              max={features.max}
-              onChangeCommitted={(e, val) => {
-                handleChange(index, val);
-              }}
-            />
-          </Box>
-        ))}
-        <Button size='large' onClick={updateSuggestions}>
-          Update
-        </Button>
-      </Paper>
-      <ListComponent type='suggestions' />
+    <Container maxWidth={false} className={classes.container}>
+      <Grid item xs={12} md={12} className={classes.formContainer}>
+        <Paper className={classes.paper} square>
+          {features.map((features, index) => (
+            <Box className={classes.box}>
+              <Typography id='discrete-slider' gutterBottom>
+                {features.feature}
+              </Typography>
+              <Slider
+                defaultValue={features.value}
+                aria-labelledby='discrete-slider'
+                valueLabelDisplay='auto'
+                step={features.steps}
+                marks
+                min={features.min}
+                max={features.max}
+                onChangeCommitted={(e, val) => {
+                  handleChange(index, val);
+                }}
+              />
+            </Box>
+          ))}
+          <Button size='large' onClick={updateSuggestions}>
+            Update
+          </Button>
+        </Paper>
+      </Grid>
+    </Container>
     </>
   );
 };

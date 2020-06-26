@@ -160,6 +160,7 @@ const FavoritesPage = () => {
             </Route>
             <Route exact path="/favorites/suggestions">
               <Suggestions />
+              <ListComponent type='suggestions' />
             </Route>
 
           </Switch>
