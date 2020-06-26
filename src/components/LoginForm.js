@@ -1,4 +1,3 @@
-// Login form
 import React, { useState, useEffect, useContext } from 'react';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -11,6 +10,7 @@ import {
   Grid,
   CircularProgress
 } from '@material-ui/core';
+
 import { UserContext } from '../contexts/UserContext';
 import { LoginContext } from '../contexts/LoginContext';
 
@@ -26,24 +26,21 @@ const formSchema = Yup.object().shape({
 const LoginForm = () => {
   const history = useHistory();
 
-  const [errors, setErrors] = useState({
-    username: '',
-    password: ''
-  });
-
-  const [serverError, setServerError] = useState('');
-
   const { setUserId } = useContext(UserContext);
 
   const {
     loginData,
     setLoginData,
+    errors,
+    setErrors,
+    serverError,
+    setServerError,
+    buttonDisabled,
+    setButtonDisabled,
     isLoading,
     setIsLoading,
     formSwitch
   } = useContext(LoginContext);
-
-  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
     formSchema.isValid(loginData).then((valid) => {
@@ -70,6 +67,7 @@ const LoginForm = () => {
 
   const handleChange = (event) => {
     event.persist();
+    setServerError('');
     setLoginData({
       ...loginData,
       [event.target.name]: event.target.value

@@ -17,23 +17,20 @@ const RegisterForm = () => {
   const history = useHistory();
 
   const { setUserId } = useContext(UserContext);
+
   const {
     loginData,
     setLoginData,
+    errors,
+    setErrors,
+    serverError,
+    setServerError,
+    buttonDisabled,
+    setButtonDisabled,
     isLoading,
     setIsLoading,
     formSwitch
   } = useContext(LoginContext);
-
-  const [serverError, setServerError] = useState('');
-
-  const [buttonDisabled, setButtonDisabled] = useState(true);
-
-  const [errors, setErrors] = useState({
-    username: '',
-    password: '',
-    confirmPassword: ''
-  });
 
   let regex = new RegExp('^' + loginData.password + '$');
 
@@ -72,6 +69,7 @@ const RegisterForm = () => {
 
   const handleChange = (event) => {
     event.persist();
+    setServerError('');
     setLoginData({
       ...loginData,
       [event.target.name]: event.target.value

@@ -1,4 +1,3 @@
-// Login form
 import React, { useState } from 'react';
 import { Container, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -92,6 +91,13 @@ const Login = () => {
     password: '',
     confirmPassword: ''
   });
+  const [errors, setErrors] = useState({
+    username: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [serverError, setServerError] = useState('');
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [loginForm, setLoginForm] = useState(true);
   const [registerForm, setRegisterForm] = useState(false);
@@ -108,7 +114,19 @@ const Login = () => {
 
   return (
     <LoginContext.Provider
-      value={{ loginData, setLoginData, isLoading, setIsLoading, formSwitch }}
+      value={{
+        loginData,
+        setLoginData,
+        errors,
+        setErrors,
+        serverError,
+        setServerError,
+        buttonDisabled,
+        setButtonDisabled,
+        isLoading,
+        setIsLoading,
+        formSwitch
+      }}
     >
       <Container maxWidth={false}>
         <Grid container className={classes.gridPosition}>
