@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ListComponent from './ListComponent';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -6,6 +6,9 @@ import Slider from '@material-ui/core/Slider';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { FavoritesContext } from '../contexts/FavoritesContext';
+import { axiosWithUserAuth } from '../utils/axiosWithAuth';
+import { UserContext } from '../contexts/UserContext';
 
 const useStyle = makeStyles(() => ({
   paper: {
@@ -39,6 +42,8 @@ const useStyle = makeStyles(() => ({
 
 const Suggestions = () => {
   const classes = useStyle();
+  const { setSuggestions } = useContext(FavoritesContext)
+  const { userId } = useContext(UserContext)
   const [features, setFeatures] = useState([
     {
       feature: 'danceability',
@@ -77,10 +82,10 @@ const Suggestions = () => {
     },
     {
       feature: 'loudness',
-      value: 0,
+      value: -60,
       max: 0,
-      min: -16,
-      steps: 1
+      min: -60,
+      steps: 5
     },
     {
       feature: 'speechiness',
@@ -111,21 +116,20 @@ const Suggestions = () => {
     setFeatures(array);
   };
 
-  let mood = {};
-  features.forEach((item) => (mood[item.feature] = item.value));
-  console.log(JSON.stringify(mood));
 
-  // const getSuggestions = () => {
-  //   axiosWithUserAuth()
-  //     .get(
-  //       `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`
-  //     )
-  //     .then((res) => {
-  //       console.log('get res', res);
-  //       setSuggestions(res.data.recommended_songs);
-  //     })
-  //     .catch((err) => console.error('get err', err.message));
-  // };
+  const updateSuggestions = () => {
+    let mood = {};
+    features.forEach((item) => (mood[item.feature] = item.value));
+    axiosWithUserAuth()
+      .post(
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,mood
+      )
+      .then((res) => {
+        console.log('get res', res);
+        setSuggestions(res.data.recommended_songs);
+      })
+      .catch((err) => console.error('get err', err.message));
+  };
 
   return (
     <>
@@ -136,7 +140,7 @@ const Suggestions = () => {
               {features.feature}
             </Typography>
             <Slider
-              defaultValue={0}
+              defaultValue={features.value}
               aria-labelledby='discrete-slider'
               valueLabelDisplay='auto'
               step={features.steps}
@@ -149,7 +153,7 @@ const Suggestions = () => {
             />
           </Box>
         ))}
-        <Button size='large'>Update</Button>
+        <Button size='large' onClick={updateSuggestions}>Update</Button>
       </Paper>
       <ListComponent  type="suggestions"/>
     </>
