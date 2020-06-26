@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 
 const styles = {
@@ -7,7 +7,29 @@ const styles = {
   }
 };
 
-const RadarChart = () => {
+const RadarChart = (props) => {
+  const {songData, averages, features} = props;
+  const [songSerie, setSongSerie] = useState([])
+  const [aveSerie, setAveSerie] = useState([])
+
+
+useEffect(() => {
+  const tempSongSerie = []
+  const tempAveSerie = []
+  features.forEach( (el, index) => {
+    if(el === "tempo") {
+      tempSongSerie.push((songData[el]/100).toFixed(3))
+      tempAveSerie.push((averages[index].value/100).toFixed(3))
+    } else {
+      tempSongSerie.push(songData[el].toFixed(3))
+    tempAveSerie.push(averages[index].value.toFixed(3))
+    }
+    
+  })
+  setAveSerie(tempAveSerie)
+  setSongSerie(tempSongSerie)
+},[averages])
+
   const chartConfig = {
     options: {
       chart: {
@@ -19,11 +41,9 @@ const RadarChart = () => {
       },
       colors: ['#6c63ff', '#ff6584'],
       fill: {
-        opacity: 0.7,
-        colors: ['#6c63ff', '#ff6584']
+        opacity: 0.2,
       },
       stroke: {
-        colors: ['#6c63ff', '#ff6584']
       },
       markers: {
         size: 0
@@ -39,16 +59,7 @@ const RadarChart = () => {
         }
       },
       xaxis: {
-        categories: [
-          'danceability',
-          'energy',
-          'instrumentalness',
-          'liveness',
-          'loudness',
-          'speechiness',
-          'valence',
-          'tempo'
-        ]
+        categories: features
       },
       yaxis: {
         show: false
@@ -63,11 +74,11 @@ const RadarChart = () => {
     series: [
       {
         name: 'Actual Song',
-        data: [0.1, 0.4, 0.45, 0.5, 0.49, 0.6, 0.7, 0.3]
+        data: songSerie
       },
       {
         name: 'Favorites Average',
-        data: [0.1, 0.5, 0.22, 0.11, 0.7, 0.9, 0.3, 0.6]
+        data: aveSerie
       }
     ]
   };

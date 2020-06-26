@@ -349,7 +349,7 @@ function Row(props) {
                   </List>
                 </Grid>
                 <Grid item xs={6}>
-                  <RadarChart />
+                  <RadarChart songData={dataList[index]} averages={favAverages} features={features}/>
                 </Grid>
               </Grid>
             </Box>
