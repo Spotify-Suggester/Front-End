@@ -89,7 +89,7 @@ const SearchForm = () => {
       setIsButtonDisabled(!valid);
     });
     console.log('searchTerm', searchTerm);
-  }, [searchTerm, formSchema]);
+  }, [searchTerm]);
 
   const validateChange = (e) => {
     Yup.reach(formSchema, e.target.name)

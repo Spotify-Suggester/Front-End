@@ -24,7 +24,6 @@ import PrevButton from '../svg/PrevButton';
 import RadarChart from './RadarChart';
 
 import { FavoritesContext } from '../contexts/FavoritesContext';
-import { UserContext } from '../contexts/UserContext';
 
 const StyledTableCell = withStyles((theme) => ({
   root: {
@@ -225,7 +224,7 @@ function ListComponent({ type }) {
           </TableBody>
         </Table>
       </TableContainer>
-      {toShow.length != 0 && type != 'favorite' && type != 'suggestions' ? (
+      {toShow.length !== 0 && type !== 'favorite' && type !== 'suggestions' ? (
         <div className={classes.paginationBar}>
           <div
             onClick={() => {
