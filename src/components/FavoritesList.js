@@ -47,8 +47,17 @@ const FavoritesList = (props) => {
 
   const getSuggestions = () => {
     axiosWithUserAuth()
-      .get(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`
+      .post(
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`, {
+          "danceability":0,
+          "energy":0,
+          "instrumentalness":0,
+          "liveness":0,
+          "acousticness":0,
+          "loudness":0,
+          "speechiness":0,
+          "valence":0,
+          "tempo":0}
       )
       .then((res) => {
         console.log('get res', res);
@@ -62,7 +71,7 @@ const FavoritesList = (props) => {
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
       <Button
-        disabled={favorites.length <= 5? true: false}
+        disabled={favorites.length < 5? true: false}
         variant='contained'
         size='large'
         onClick={() => {
@@ -70,7 +79,7 @@ const FavoritesList = (props) => {
           getSuggestions();
         }}
       >
-        { favorites.length <= 5 ? `Please add ${5 - favorites.length} more Favorites` : 'Suggest Songs'}
+        { favorites.length < 5 ? `Please add ${5 - favorites.length} more ${(5 - favorites.length) === 1 ? 'Favorite' : 'Favorites'}` : 'Suggest Songs'}
       </Button>
     </Container>
   );

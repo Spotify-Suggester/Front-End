@@ -88,6 +88,23 @@ const useStyle = makeStyles(() => ({
     '&:nth-of-type(odd)': {
       backgroundColor: 'rgba(0,0,0,.45)'
     }
+  },
+  paginationBar: {
+    display: "flex",
+    paddingTop: "10px",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    "& p": {
+      fontSize: "14px",
+      lineHeight: .6
+    },
+    "& svg:hover path": {
+      cursor: "pointer",
+      fill: "#4a41d4"
+    },
+    "& div:hover": {
+      cursor: "pointer"
+    }
   }
 }));
 
@@ -147,6 +164,7 @@ function ListComponent(props) {
   });
 
   return (
+    <>
     <TableContainer
       className={props.type === 'favorite' ? classes.container : classes.normal}
     >
@@ -212,17 +230,20 @@ function ListComponent(props) {
               </>
             )
           )}
-          {(toShow.length != 0 && props.type != 'favorite' && props.type != 'suggestions') ? (
-            <div style={{color: "white"}}>
-              <div onClick={() => {changePage("back")}}><NextButton>Back</NextButton></div>  <div onClick={() => {changePage("next")}}><PrevButton>Next</PrevButton></div>
-            </div>
-          ) : ('')
-            
-          }
-          
         </TableBody>
       </Table>
+      
     </TableContainer>
+    {(toShow.length != 0 && props.type != 'favorite' && props.type != 'suggestions') ? (
+        <div className={classes.paginationBar}>
+          <div onClick={() => {changePage("next")}}><PrevButton size="40px" color="#6C63FF">Next</PrevButton></div>
+          <p>{`Page ${page+1} of ${Math.ceil(results.length/10)}`}</p>
+          <div onClick={() => {changePage("back")}}><NextButton size="40px" color="#6C63FF">Back</NextButton></div>
+        </div>
+      ) : ('')
+        
+      }
+    </>
   );
 }
 

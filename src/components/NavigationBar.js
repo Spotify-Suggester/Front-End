@@ -41,7 +41,7 @@ const NavigationBar = (props) => {
     <AppBar position='fixed' className={classes.bar}>
       <Toolbar>
         <Typography variant='h6' className={classes.title}>
-          Spotify Suggestions
+          Spotify Suggester
         </Typography>
         <Button
           size='large'

@@ -37,9 +37,8 @@ const LoginForm = (props) => {
 
   const [serverError, setServerError] = useState('');
 
-  const [isLoading, setIsLoading] = useState(false);
 
-  const { userId, setUserId } = useContext(UserContext);
+  const { userId, setUserId, isLoading, setIsLoading} = useContext(UserContext);
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
@@ -93,6 +92,10 @@ const LoginForm = (props) => {
         localStorage.setItem(
           'access_token',
           response.data.spotify.access_token
+        );
+        localStorage.setItem(
+          'userId',
+          response.data.auth.id
         );
 
         setLoginData({

@@ -8,7 +8,7 @@ import SuggestionList from './SuggestionList';
 import NavigationBar from './NavigationBar';
 import ListComponent from './ListComponent';
 
-import SearchMood from './SearchMood';
+import Suggestions from './Suggestions';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -162,7 +162,7 @@ const FavoritesPage = () => {
               <ListComponent />
             </>
           ) : (
-            <SuggestionList />
+            <Suggestions />
           )}
         </Container>
       </Container>
