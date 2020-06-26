@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiButton-contained.Mui-disabled': {
       color: 'rgba(0, 0, 0, .45)'
-    },
+    }
   },
   header: {
     fontWeight: 300,

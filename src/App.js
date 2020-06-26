@@ -17,7 +17,12 @@ function App() {
     <div className='container'>
       <Router>
         <UserContext.Provider
-          value={{ userId, setUserId, loginData, setLoginData }}
+          value={{
+            userId,
+            setUserId,
+            loginData,
+            setLoginData
+          }}
         >
           <Switch>
             <PrivateRoute path='/favorites' component={FavoritesPage} />
