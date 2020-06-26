@@ -161,8 +161,6 @@ const FavoritesPage = () => {
               <SearchForm />
               <ListComponent />
             </>
-          ) : isShowing === 'mood' ? (
-            <SearchMood />
           ) : (
             <SuggestionList />
           )}

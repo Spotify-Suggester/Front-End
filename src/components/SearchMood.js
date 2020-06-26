@@ -42,39 +42,66 @@ const SearchMood = () => {
   const [features, setFeatures] = useState([
     {
       feature: 'danceability',
-      value: 0
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
     },
     {
       feature: 'energy',
-      value: 0
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
     },
     {
       feature: 'instrumentalness',
-      value: 0
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
     },
     {
       feature: 'liveness',
-      value: 0
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
     },
     {
       feature: 'acousticness',
-      value: 0
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
     },
     {
       feature: 'loudness',
-      value: 0
+      value: 0,
+      max: 0,
+      min: -16,
+      steps: 1
     },
     {
       feature: 'speechiness',
-      value: 0
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
     },
     {
       feature: 'valence',
-      value: 0
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
     },
     {
       feature: 'tempo',
-      value: 0
+      value: 0,
+      max: 250,
+      min: 0,
+      steps: 10
     }
   ]);
 
@@ -112,19 +139,19 @@ const SearchMood = () => {
               defaultValue={0}
               aria-labelledby='discrete-slider'
               valueLabelDisplay='auto'
-              step={0.1}
+              step={features.steps}
               marks
-              min={0}
-              max={1}
+              min={features.min}
+              max={features.max}
               onChangeCommitted={(e, val) => {
                 handleChange(index, val);
               }}
             />
           </Box>
         ))}
-        <Button size='large'>Search</Button>
+        <Button size='large'>Update</Button>
       </Paper>
-      <ListComponent />
+      <ListComponent  type="suggestions"/>
     </>
   );
 };
