@@ -11,17 +11,19 @@ import {
   CircularProgress
 } from '@material-ui/core';
 import { UserContext } from '../contexts/UserContext';
+import { LoginContext } from '../contexts/LoginContext';
 
-const RegisterForm = (props) => {
+const RegisterForm = () => {
   const history = useHistory();
 
+  const { setUserId } = useContext(UserContext);
   const {
     loginData,
     setLoginData,
-    setUserId,
     isLoading,
-    setIsLoading
-  } = useContext(UserContext);
+    setIsLoading,
+    formSwitch
+  } = useContext(LoginContext);
 
   const [serverError, setServerError] = useState('');
 
@@ -200,7 +202,7 @@ const RegisterForm = (props) => {
             size='large'
             style={{ backgroundColor: '#FF6584', color: 'black' }}
             fullWidth
-            onClick={props.formSwitch}
+            onClick={formSwitch}
           >
             Sign In
           </Button>

@@ -12,6 +12,7 @@ import {
   CircularProgress
 } from '@material-ui/core';
 import { UserContext } from '../contexts/UserContext';
+import { LoginContext } from '../contexts/LoginContext';
 
 const formSchema = Yup.object().shape({
   username: Yup.string()
@@ -22,13 +23,8 @@ const formSchema = Yup.object().shape({
     .required('Password is a required field.')
 });
 
-const LoginForm = (props) => {
+const LoginForm = () => {
   const history = useHistory();
-
-  const [loginData, setLoginData] = useState({
-    username: '',
-    password: ''
-  });
 
   const [errors, setErrors] = useState({
     username: '',
@@ -37,7 +33,15 @@ const LoginForm = (props) => {
 
   const [serverError, setServerError] = useState('');
 
-  const { setUserId, isLoading, setIsLoading } = useContext(UserContext);
+  const { setUserId } = useContext(UserContext);
+
+  const {
+    loginData,
+    setLoginData,
+    isLoading,
+    setIsLoading,
+    formSwitch
+  } = useContext(LoginContext);
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
@@ -182,7 +186,7 @@ const LoginForm = (props) => {
             size='large'
             style={{ backgroundColor: '#FF6584', color: 'black' }}
             fullWidth
-            onClick={props.formSwitch}
+            onClick={formSwitch}
           >
             Create An Account
           </Button>

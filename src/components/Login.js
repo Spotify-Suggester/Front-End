@@ -1,10 +1,13 @@
 // Login form
 import React, { useState } from 'react';
-import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
 import { Container, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 import Logo from '../svg/Logo';
+
+import { LoginContext } from '../contexts/LoginContext';
 
 const useStyles = makeStyles(() => ({
   gridPosition: {
@@ -84,6 +87,12 @@ const useStyles = makeStyles(() => ({
 const Login = () => {
   const classes = useStyles();
 
+  const [loginData, setLoginData] = useState({
+    username: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const [loginForm, setLoginForm] = useState(true);
   const [registerForm, setRegisterForm] = useState(false);
 
@@ -98,21 +107,25 @@ const Login = () => {
   };
 
   return (
-    <Container maxWidth={false}>
-      <Grid container className={classes.gridPosition}>
-        <Grid item xs={12} md={6} className={classes.hero}>
-          <Logo className={classes.svg} />
-          <h1 className={classes.brandTitle}>Spotify Suggester</h1>
-          <span>Best app to find new songs based on your selections.</span>
+    <LoginContext.Provider
+      value={{ loginData, setLoginData, isLoading, setIsLoading, formSwitch }}
+    >
+      <Container maxWidth={false}>
+        <Grid container className={classes.gridPosition}>
+          <Grid item xs={12} md={6} className={classes.hero}>
+            <Logo className={classes.svg} />
+            <h1 className={classes.brandTitle}>Spotify Suggester</h1>
+            <span>Best app to find new songs based on your selections.</span>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.formContainer}>
+            <Box className={classes.form}>
+              {loginForm && <LoginForm />}
+              {registerForm && <RegisterForm />}
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6} className={classes.formContainer}>
-          <Box className={classes.form}>
-            {loginForm && <LoginForm formSwitch={formSwitch} />}
-            {registerForm && <RegisterForm formSwitch={formSwitch} />}
-          </Box>
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </LoginContext.Provider>
   );
 };
 
