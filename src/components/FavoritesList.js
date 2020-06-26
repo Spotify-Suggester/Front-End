@@ -16,13 +16,14 @@ const useStyles = makeStyles(() => ({
     background: "rgba(0,0,0,.45)",
     position: "fixed",
     zIndex: "100",
-    height: "100vh",
+    top: 65,
+    bottom: 0,
     "& .MuiButton-contained": {
       backgroundColor: "#6C63FF",
       color: "white",
       width: "calc(100% - 48px)",
       position: "absolute",
-      bottom: "100px",
+      bottom: "30px",
       "&:hover": {
         background: "#4a41d4"
       }

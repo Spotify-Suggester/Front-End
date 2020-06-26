@@ -45,7 +45,7 @@ const SuggestionList = () => {
   return (
     <>
       <h2 style={{fontWeight: 300, marginBottom: "30px"}}>Suggestions List</h2>
-      <ListComponent  suggestions={suggestion}/>
+      <ListComponent  type="suggestions"/>
     </>
     );
 };

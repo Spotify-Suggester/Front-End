@@ -126,12 +126,14 @@ const SearchForm = () => {
       .then((res) => {
         console.log("spotify get req", res.data.tracks.items);
         const data = res.data.tracks.items;
+
         const songs = data.map((track) => {
           return {
             id: track.id,
             name: track.name,
             artist: track.artists[0].name,
             album: track.album.name,
+            image_url: track.album.images[0].url,
           };
         });
         setResults(songs);
