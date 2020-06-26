@@ -76,7 +76,6 @@ const FavoritesList = ({ setIsShowing }) => {
         variant='contained'
         size='large'
         onClick={() => {
-          setIsShowing('suggestions');
           getSuggestions();
         }}
       >

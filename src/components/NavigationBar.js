@@ -46,9 +46,6 @@ const NavigationBar = ({ setIsShowing }) => {
         </Typography>
         <Link to="/favorites"><Button
           size='large'
-          onClick={() => {
-            setIsShowing('search');
-          }}
         >
           Search by Song/Artist
         </Button></Link>
