@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TablePagination from '@material-ui/core/TablePagination';
 import PlusSign from '../svg/PlusSign';
 import MinusSign from '../svg/MinusSign';
 import List from '@material-ui/core/List';
@@ -21,6 +22,8 @@ import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 import ArrowDown from '../svg/ArrowDown';
 import Grid from '@material-ui/core/Grid';
 import ArrowUp from '../svg/ArrowUp';
+import NextButton from '../svg/NextButton'
+import PrevButton from '../svg/PrevButton'
 import RadarChart from './RadarChart';
 
 const StyledTableCell = withStyles((theme) => ({
@@ -58,7 +61,10 @@ function createData(id, name, artist, album, image_url) {
 
 const useStyle = makeStyles(() => ({
   normal: {
-    overflowY: 'hidden'
+    overflowY: 'hidden',
+    "& .MuiTablePagination-root" : {
+      color: "white !important"
+    }
   },
   container: {
     maxHeight: '80%',
@@ -73,6 +79,9 @@ const useStyle = makeStyles(() => ({
     },
     '&::-webkit-scrollbar-thumb:hover': {
       background: '#ff6584'
+    },
+    "& .MuiTablePagination-root": {
+      color:"white"
     }
   },
   normalRow: {
@@ -92,13 +101,16 @@ function ListComponent(props) {
     suggestions
   } = useContext(FavoritesContext);
 
+  const [toShow, setToShow] = useState([])
+  const [page, setPage] = useState(0)
+
   const { userId, setUserId } = useContext(UserContext);
 
+
+
   useEffect(() => {
-    if (!userId) {
-      setUserId(localStorage.getItem('userId'));
-    }
-  });
+    setToShow(results.slice(10*page,10*page+10))
+  },[results, page]);
 
   let dataList = [];
   if (props.type === 'favorite') {
@@ -107,12 +119,23 @@ function ListComponent(props) {
     if (props.type === 'suggestions') {
       dataList = suggestions;
     } else {
-      dataList = results;
+      dataList = toShow;
     }
   }
 
   const classes = useStyle();
 
+  const changePage = (direction) => {
+  if(direction === "next") {
+    if(page < Math.ceil(results.length/10)-1)
+        setPage(page+1)
+    } else {
+      if(page > 0)
+      setPage(page-1)
+    }
+  }
+
+    
   const rows = dataList.map((result) => {
     return createData(
       result.id,
@@ -189,6 +212,14 @@ function ListComponent(props) {
               </>
             )
           )}
+          {(toShow.length != 0 && props.type != 'favorite' && props.type != 'suggestions') ? (
+            <div style={{color: "white"}}>
+              <div onClick={() => {changePage("back")}}><NextButton>Back</NextButton></div>  <div onClick={() => {changePage("next")}}><PrevButton>Next</PrevButton></div>
+            </div>
+          ) : ('')
+            
+          }
+          
         </TableBody>
       </Table>
     </TableContainer>

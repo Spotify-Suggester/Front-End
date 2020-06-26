@@ -62,7 +62,7 @@ const FavoritesList = (props) => {
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
       <Button
-        disabled={favorites.length <= 10? true: false}
+        disabled={favorites.length <= 5? true: false}
         variant='contained'
         size='large'
         onClick={() => {
@@ -70,7 +70,7 @@ const FavoritesList = (props) => {
           getSuggestions();
         }}
       >
-        Suggest Songs
+        { favorites.length <= 5 ? `Please add ${5 - favorites.length} more Favorites` : 'Suggest Songs'}
       </Button>
     </Container>
   );

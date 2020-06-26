@@ -11,8 +11,7 @@ const useStyle = makeStyles(() => ({
   paper: {
     display: 'flex',
     padding: '40px 20px 10px',
-    marginTop: '-50px',
-    marginBottom: '30px',
+    margin: '-50px -40px 30px',
     color: 'white',
     border: '1px solid #6c63FF',
     background: 'rgba(0,0,0,.45)',
@@ -55,6 +54,10 @@ const SearchMood = () => {
     },
     {
       feature: 'liveness',
+      value: 0
+    },
+    {
+      feature: 'acousticness',
       value: 0
     },
     {
