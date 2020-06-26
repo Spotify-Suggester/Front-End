@@ -22,8 +22,8 @@ import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 import ArrowDown from '../svg/ArrowDown';
 import Grid from '@material-ui/core/Grid';
 import ArrowUp from '../svg/ArrowUp';
-import NextButton from '../svg/NextButton'
-import PrevButton from '../svg/PrevButton'
+import NextButton from '../svg/NextButton';
+import PrevButton from '../svg/PrevButton';
 import RadarChart from './RadarChart';
 
 const StyledTableCell = withStyles((theme) => ({
@@ -62,8 +62,8 @@ function createData(id, name, artist, album, image_url) {
 const useStyle = makeStyles(() => ({
   normal: {
     overflowY: 'hidden',
-    "& .MuiTablePagination-root" : {
-      color: "white !important"
+    '& .MuiTablePagination-root': {
+      color: 'white !important'
     }
   },
   container: {
@@ -80,8 +80,8 @@ const useStyle = makeStyles(() => ({
     '&::-webkit-scrollbar-thumb:hover': {
       background: '#ff6584'
     },
-    "& .MuiTablePagination-root": {
-      color:"white"
+    '& .MuiTablePagination-root': {
+      color: 'white'
     }
   },
   normalRow: {
@@ -90,20 +90,20 @@ const useStyle = makeStyles(() => ({
     }
   },
   paginationBar: {
-    display: "flex",
-    paddingTop: "10px",
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-    "& p": {
-      fontSize: "14px",
-      lineHeight: .6
+    display: 'flex',
+    paddingTop: '10px',
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    '& p': {
+      fontSize: '14px',
+      lineHeight: 0.6
     },
-    "& svg:hover path": {
-      cursor: "pointer",
-      fill: "#4a41d4"
+    '& svg:hover path': {
+      cursor: 'pointer',
+      fill: '#4a41d4'
     },
-    "& div:hover": {
-      cursor: "pointer"
+    '& div:hover': {
+      cursor: 'pointer'
     }
   }
 }));
@@ -115,19 +115,19 @@ function ListComponent(props) {
     addFavorite,
     removeFavorite,
     results,
-    suggestions
+    suggestions,
+    page,
+    setPage
   } = useContext(FavoritesContext);
 
-  const [toShow, setToShow] = useState([])
-  const [page, setPage] = useState(0)
+  const [toShow, setToShow] = useState([]);
+  // const [page, setPage] = useState(0);
 
   const { userId, setUserId } = useContext(UserContext);
 
-
-
   useEffect(() => {
-    setToShow(results.slice(10*page,10*page+10))
-  },[results, page]);
+    setToShow(results.slice(10 * page, 10 * page + 10));
+  }, [results, page]);
 
   let dataList = [];
   if (props.type === 'favorite') {
@@ -143,16 +143,13 @@ function ListComponent(props) {
   const classes = useStyle();
 
   const changePage = (direction) => {
-  if(direction === "next") {
-    if(page < Math.ceil(results.length/10)-1)
-        setPage(page+1)
+    if (direction === 'next') {
+      if (page < Math.ceil(results.length / 10) - 1) setPage(page + 1);
     } else {
-      if(page > 0)
-      setPage(page-1)
+      if (page > 0) setPage(page - 1);
     }
-  }
+  };
 
-    
   const rows = dataList.map((result) => {
     return createData(
       result.id,
@@ -165,84 +162,103 @@ function ListComponent(props) {
 
   return (
     <>
-    <TableContainer
-      className={props.type === 'favorite' ? classes.container : classes.normal}
-    >
-      <Table stickyHeader aria-label='customized table'>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell></StyledTableCell>
+      <TableContainer
+        className={
+          props.type === 'favorite' ? classes.container : classes.normal
+        }
+      >
+        <Table stickyHeader aria-label='customized table'>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell></StyledTableCell>
 
-            <StyledTableCell>Song Name</StyledTableCell>
-            {props.type !== 'favorite' ? (
-              <>
-                <StyledTableCell align='right'>Artist</StyledTableCell>
-                <StyledTableCell align='right'>Album</StyledTableCell>
-                {props.type === 'suggestions' ? (
-                  <StyledTableCell></StyledTableCell>
-                ) : (
-                  ''
-                )}
-              </>
-            ) : (
-              ''
-            )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row, index) =>
-            props.type === 'suggestions' ? (
-              <Row key={row.id} row={row} dataList={dataList} index={index} />
-            ) : (
-              <>
-                <StyledTableRow key={row.id} className={classes.normalRow}>
-                  <StyledTableCell component='th' scope='row'>
-                    {props.type !== 'favorite' ? (
-                      <span
-                        onClick={() => {
-                          addFavorite(dataList[index]);
-                        }}
-                      >
-                        <PlusSign color='#ff6584' />
-                      </span>
-                    ) : (
-                      <span onClick={() => removeFavorite(row)}>
-                        <MinusSign color='#ff6584' />
-                      </span>
-                    )}
-                  </StyledTableCell>
-                  <StyledTableCell component='th' scope='row'>
-                    {row.name}
-                  </StyledTableCell>
-                  {props.type !== 'favorite' ? (
-                    <>
-                      <StyledTableCell align='right'>
-                        {row.artist}
-                      </StyledTableCell>
-                      <StyledTableCell align='right'>
-                        {row.album}
-                      </StyledTableCell>
-                    </>
+              <StyledTableCell>Song Name</StyledTableCell>
+              {props.type !== 'favorite' ? (
+                <>
+                  <StyledTableCell align='right'>Artist</StyledTableCell>
+                  <StyledTableCell align='right'>Album</StyledTableCell>
+                  {props.type === 'suggestions' ? (
+                    <StyledTableCell></StyledTableCell>
                   ) : (
                     ''
                   )}
-                </StyledTableRow>
-              </>
-            )
-          )}
-        </TableBody>
-      </Table>
-      
-    </TableContainer>
-    {(toShow.length != 0 && props.type != 'favorite' && props.type != 'suggestions') ? (
+                </>
+              ) : (
+                ''
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) =>
+              props.type === 'suggestions' ? (
+                <Row key={row.id} row={row} dataList={dataList} index={index} />
+              ) : (
+                <>
+                  <StyledTableRow key={row.id} className={classes.normalRow}>
+                    <StyledTableCell component='th' scope='row'>
+                      {props.type !== 'favorite' ? (
+                        <span
+                          onClick={() => {
+                            addFavorite(dataList[index]);
+                          }}
+                        >
+                          <PlusSign color='#ff6584' />
+                        </span>
+                      ) : (
+                        <span onClick={() => removeFavorite(row)}>
+                          <MinusSign color='#ff6584' />
+                        </span>
+                      )}
+                    </StyledTableCell>
+                    <StyledTableCell component='th' scope='row'>
+                      {row.name}
+                    </StyledTableCell>
+                    {props.type !== 'favorite' ? (
+                      <>
+                        <StyledTableCell align='right'>
+                          {row.artist}
+                        </StyledTableCell>
+                        <StyledTableCell align='right'>
+                          {row.album}
+                        </StyledTableCell>
+                      </>
+                    ) : (
+                      ''
+                    )}
+                  </StyledTableRow>
+                </>
+              )
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {toShow.length != 0 &&
+      props.type != 'favorite' &&
+      props.type != 'suggestions' ? (
         <div className={classes.paginationBar}>
-          <div onClick={() => {changePage("next")}}><PrevButton size="40px" color="#6C63FF">Next</PrevButton></div>
-          <p>{`Page ${page+1} of ${Math.ceil(results.length/10)}`}</p>
-          <div onClick={() => {changePage("back")}}><NextButton size="40px" color="#6C63FF">Back</NextButton></div>
+          <div
+            onClick={() => {
+              changePage('next');
+            }}
+          >
+            <PrevButton size='40px' color='#6C63FF'>
+              Next
+            </PrevButton>
+          </div>
+          <p>{`Page ${page + 1} of ${Math.ceil(results.length / 10)}`}</p>
+          <div
+            onClick={() => {
+              changePage('back');
+            }}
+          >
+            <NextButton size='40px' color='#6C63FF'>
+              Back
+            </NextButton>
+          </div>
         </div>
-      ) : ('')
-        
-      }
+      ) : (
+        ''
+      )}
     </>
   );
 }
@@ -401,7 +417,11 @@ function Row(props) {
                   </List>
                 </Grid>
                 <Grid item xs={6}>
-                  <RadarChart songData={dataList[index]} averages={favAverages} features={features}/>
+                  <RadarChart
+                    songData={dataList[index]}
+                    averages={favAverages}
+                    features={features}
+                  />
                 </Grid>
               </Grid>
             </Box>

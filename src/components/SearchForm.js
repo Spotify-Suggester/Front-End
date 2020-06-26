@@ -5,9 +5,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { Container, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  axiosWithSpotifyAuth
-} from '../utils/axiosWithAuth';
+import { axiosWithSpotifyAuth } from '../utils/axiosWithAuth';
 import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const useStyles = makeStyles(() => ({
@@ -80,7 +78,7 @@ const SearchForm = () => {
     searchInput: ''
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const { setResults } = useContext(FavoritesContext);
+  const { setResults, setPage } = useContext(FavoritesContext);
 
   useEffect(() => {
     formSchema.isValid(searchTerm).then((valid) => {
@@ -117,6 +115,7 @@ const SearchForm = () => {
 
   const formSubmit = (e) => {
     setResults([]);
+    setPage(0);
 
     const searchString = searchTerm.searchInput.replace(' ', '%20');
 
@@ -128,7 +127,7 @@ const SearchForm = () => {
       .then((res) => {
         console.log('spotify get req', res.data.tracks.items);
         const data = res.data.tracks.items;
-        
+
         const songs = data.map((track) => {
           return {
             id: track.id,

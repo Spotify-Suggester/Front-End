@@ -37,8 +37,7 @@ const LoginForm = (props) => {
 
   const [serverError, setServerError] = useState('');
 
-
-  const { setUserId, isLoading, setIsLoading} = useContext(UserContext);
+  const { setUserId, isLoading, setIsLoading } = useContext(UserContext);
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
@@ -93,15 +92,7 @@ const LoginForm = (props) => {
           'access_token',
           response.data.spotify.access_token
         );
-        localStorage.setItem(
-          'userId',
-          response.data.auth.id
-        );
-
-        setLoginData({
-          username: '',
-          password: ''
-        });
+        localStorage.setItem('userId', response.data.auth.id);
 
         setServerError(null);
 
@@ -110,8 +101,15 @@ const LoginForm = (props) => {
       .catch((err) => {
         setIsLoading(false);
 
-        setServerError('Login failed. Please try again. ');
+        setServerError(
+          'Login failed. Please try again or create a new account. '
+        );
       });
+
+    setLoginData({
+      username: '',
+      password: ''
+    });
   };
 
   if (isLoading) {

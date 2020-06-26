@@ -1,19 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { UserContext } from '../contexts/UserContext';
-import { FavoritesContext } from '../contexts/FavoritesContext';
 import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
 import NavigationBar from './NavigationBar';
 import ListComponent from './ListComponent';
-
 import Suggestions from './Suggestions';
-import Container from '@material-ui/core/Container';
-import { makeStyles } from '@material-ui/core/styles';
+import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 
-import {
-  axiosWithUserAuth,
-} from '../utils/axiosWithAuth';
+import { UserContext } from '../contexts/UserContext';
+import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -38,14 +35,15 @@ const FavoritesPage = () => {
   const [results, setResults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [isShowing, setIsShowing] = useState('search');
+  const [page, setPage] = useState(0);
   const { userId, setUserId } = useContext(UserContext);
   const classes = useStyles();
 
   useEffect(() => {
-    console.log('userId', userId);
     if (!userId) {
       setUserId(localStorage.getItem('userId'));
     }
+
     axiosWithUserAuth()
       .get(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`
@@ -53,7 +51,7 @@ const FavoritesPage = () => {
       .then((res) => {
         setFavorites(res.data.favorite_songs);
       })
-      .catch((err) => console.error('err', err.response));
+      .catch((err) => console.error('err', err.message));
   }, [userId]);
 
   useEffect(() => {
@@ -70,7 +68,6 @@ const FavoritesPage = () => {
         feature: 'energy',
         value: 0
       },
-
       {
         feature: 'liveness',
         value: 0
@@ -103,7 +100,7 @@ const FavoritesPage = () => {
           parseFloat(song[item.feature]) / favorites.length;
       });
     });
-    console.log(result);
+
     setFavAverages(result);
   };
 
@@ -115,7 +112,6 @@ const FavoritesPage = () => {
           { song_id: song.id }
         )
         .then((res) => {
-          console.log('post response', res);
           setFavorites(res.data.favorite_songs);
         })
         .catch((err) => console.error('post error', err.message));
@@ -128,10 +124,9 @@ const FavoritesPage = () => {
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites/${song.id}`
       )
       .then((res) => {
-        console.log('delete response', res);
         setFavorites(res.data.favorite_songs);
       })
-      .catch((err) => console.error('delete error', err));
+      .catch((err) => console.error('delete error', err.message));
   };
 
   return (
@@ -145,7 +140,9 @@ const FavoritesPage = () => {
         setSuggestions,
         addFavorite,
         removeFavorite,
-        favAverages
+        favAverages,
+        page,
+        setPage
       }}
     >
       <Container className={classes.container} maxWidth='full'>
