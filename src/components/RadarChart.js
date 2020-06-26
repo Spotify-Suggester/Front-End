@@ -18,17 +18,17 @@ useEffect(() => {
   const tempAveSerie = []
   features.forEach( (el, index) => {
     if(el === "tempo") {
-      tempSongSerie.push((songData[el]/100).toFixed(3))
-      tempAveSerie.push((averages[index].value/100).toFixed(3))
+      tempSongSerie.push((songData[el]/20).toFixed(3))
+      tempAveSerie.push((averages[index].value/20).toFixed(3))
     } else {
       tempSongSerie.push(songData[el].toFixed(3))
-    tempAveSerie.push(averages[index].value.toFixed(3))
+      tempAveSerie.push(averages[index].value.toFixed(3))
     }
     
   })
   setAveSerie(tempAveSerie)
   setSongSerie(tempSongSerie)
-},[averages])
+},[averages, features, songData])
 
   const chartConfig = {
     options: {
@@ -73,7 +73,7 @@ useEffect(() => {
     },
     series: [
       {
-        name: 'Actual Song',
+        name: 'Actual Song',        
         data: songSerie
       },
       {
@@ -82,6 +82,8 @@ useEffect(() => {
       }
     ]
   };
+  console.log(">>>>>", songSerie, aveSerie);
+  
   return (
     <Chart
       options={chartConfig.options}
