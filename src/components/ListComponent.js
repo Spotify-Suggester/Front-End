@@ -121,8 +121,6 @@ function ListComponent({ type }) {
 
   const [toShow, setToShow] = useState([]);
 
-  const { userId, setUserId } = useContext(UserContext);
-
   useEffect(() => {
     setToShow(results.slice(10 * page, 10 * page + 10));
   }, [results, page]);

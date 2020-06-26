@@ -1,13 +1,15 @@
 import React, { useState, useContext } from 'react';
-import ListComponent from './ListComponent';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { FavoritesContext } from '../contexts/FavoritesContext';
+
+import ListComponent from './ListComponent';
 import { axiosWithUserAuth } from '../utils/axiosWithAuth';
+
+import { FavoritesContext } from '../contexts/FavoritesContext';
 import { UserContext } from '../contexts/UserContext';
 
 const useStyle = makeStyles(() => ({
@@ -42,8 +44,7 @@ const useStyle = makeStyles(() => ({
 
 const Suggestions = () => {
   const classes = useStyle();
-  const { setSuggestions } = useContext(FavoritesContext)
-  const { userId } = useContext(UserContext)
+
   const [features, setFeatures] = useState([
     {
       feature: 'danceability',
@@ -110,22 +111,25 @@ const Suggestions = () => {
     }
   ]);
 
+  const { setSuggestions } = useContext(FavoritesContext);
+  const { userId } = useContext(UserContext);
+
   const handleChange = (index, value) => {
     let array = features;
     array[index].value = value;
     setFeatures(array);
   };
 
-
   const updateSuggestions = () => {
     let mood = {};
     features.forEach((item) => (mood[item.feature] = item.value));
+
     axiosWithUserAuth()
       .post(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,mood
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,
+        mood
       )
       .then((res) => {
-        console.log('get res', res);
         setSuggestions(res.data.recommended_songs);
       })
       .catch((err) => console.error('get err', err.message));
@@ -153,9 +157,11 @@ const Suggestions = () => {
             />
           </Box>
         ))}
-        <Button size='large' onClick={updateSuggestions}>Update</Button>
+        <Button size='large' onClick={updateSuggestions}>
+          Update
+        </Button>
       </Paper>
-      <ListComponent  type="suggestions"/>
+      <ListComponent type='suggestions' />
     </>
   );
 };

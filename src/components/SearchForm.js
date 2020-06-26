@@ -1,11 +1,12 @@
-// Form that allows user to search for song by title, artist, genre, etc.
 import React, { useState, useContext, useEffect } from 'react';
 import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { Container, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
 import { axiosWithSpotifyAuth } from '../utils/axiosWithAuth';
+
 import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const useStyles = makeStyles(() => ({
@@ -65,7 +66,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const formSchema = Yup.object().shape({
-  searchInput: Yup.string().required('Search term is required')
+  searchInput: Yup.string().required(
+    'Please enter the name of a song or artist'
+  )
 });
 
 const SearchForm = () => {
@@ -78,6 +81,7 @@ const SearchForm = () => {
     searchInput: ''
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
   const { setResults, setPage } = useContext(FavoritesContext);
 
   useEffect(() => {
@@ -85,7 +89,7 @@ const SearchForm = () => {
       setIsButtonDisabled(!valid);
     });
     console.log('searchTerm', searchTerm);
-  }, [searchTerm]);
+  }, [searchTerm, formSchema]);
 
   const validateChange = (e) => {
     Yup.reach(formSchema, e.target.name)
@@ -125,7 +129,6 @@ const SearchForm = () => {
         `https://api.spotify.com/v1/search?q=${searchString}&type=track%2Cartist&market=US&limit=35&offset=5`
       )
       .then((res) => {
-        console.log('spotify get req', res.data.tracks.items);
         const data = res.data.tracks.items;
 
         const songs = data.map((track) => {
@@ -139,7 +142,7 @@ const SearchForm = () => {
         });
         setResults(songs);
       })
-      .catch((err) => console.error('spotify get req error', err));
+      .catch((err) => console.error('spotify get req error', err.message));
 
     setSearchTerm({
       searchInput: ''
@@ -153,7 +156,7 @@ const SearchForm = () => {
           <TextField
             name='searchInput'
             id='searchInput'
-            label='Search for your favorite songs or artist'
+            label='Search for your favorite songs or artists'
             fullWidth
             onChange={inputChange}
             value={searchTerm.searchInput}
