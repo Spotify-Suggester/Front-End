@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
+import { Link } from 'react-router-dom';
 import ListComponent from './ListComponent';
 import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 
@@ -71,7 +71,7 @@ const FavoritesList = ({ setIsShowing }) => {
     <Container className={classes.container}>
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
-      <Button
+      <Link to="/favorites/suggestions"><Button
         disabled={favorites.length < 5 ? true : false}
         variant='contained'
         size='large'
@@ -85,7 +85,7 @@ const FavoritesList = ({ setIsShowing }) => {
               5 - favorites.length === 1 ? 'Favorite' : 'Favorites'
             }`
           : 'Suggest Songs'}
-      </Button>
+      </Button></Link>
     </Container>
   );
 };

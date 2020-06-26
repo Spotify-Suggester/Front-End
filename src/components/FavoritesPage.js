@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { Route, Switch } from 'react-router-dom';
 import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
 import NavigationBar from './NavigationBar';
@@ -152,14 +152,25 @@ const FavoritesPage = () => {
         <FavoritesList setIsShowing={setIsShowing} />
         <Container className={classes.emptyContainer} />
         <Container className={classes.mainContainer}>
-          {isShowing === 'search' ? (
+
+        <Switch>
+            <Route exact path="/favorites">
+              <SearchForm />
+              <ListComponent />
+            </Route>
+            <Route exact path="/favorites/suggestions">
+              <Suggestions />
+            </Route>
+
+          </Switch>
+          {/* {isShowing === 'search' ? (
             <>
               <SearchForm />
               <ListComponent />
             </>
           ) : (
             <Suggestions />
-          )}
+          )} */}
         </Container>
       </Container>
     </FavoritesContext.Provider>
