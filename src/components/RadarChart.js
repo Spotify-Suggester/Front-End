@@ -1,79 +1,98 @@
-import React from "react";
-import Chart from "react-apexcharts";
-
+import React, { useState, useEffect } from 'react';
+import Chart from 'react-apexcharts';
 
 const styles = {
   radar: {
-    margin: "-50px 0 -50px -10px"
+    margin: '-50px 0 -50px -10px'
   }
-}
+};
+
+const RadarChart = (props) => {
+  const {songData, averages, features} = props;
+  const [songSerie, setSongSerie] = useState([])
+  const [aveSerie, setAveSerie] = useState([])
 
 
-const RadarChart = () => {
+useEffect(() => {
+  const tempSongSerie = []
+  const tempAveSerie = []
+  features.forEach( (el, index) => {
+    if(el === "tempo") {
+      tempSongSerie.push((songData[el]/20).toFixed(3))
+      tempAveSerie.push((averages[index].value/20).toFixed(3))
+    } else {
+      tempSongSerie.push(songData[el].toFixed(3))
+      tempAveSerie.push(averages[index].value.toFixed(3))
+    }
+    
+  })
+  setAveSerie(tempAveSerie)
+  setSongSerie(tempSongSerie)
+},[averages, features, songData])
 
-    const chartConfig = {
-        options: {
-          chart: {
-            id: "basic-bar",
-            background: "transparent",
-            toolbar: {
-              show: false
-            }
-          },
-          colors: ["#6c63ff", "#ff6584"],
-          fill: {
-            opacity: 0.7,
-            colors: ["#6c63ff", "#ff6584"]
-          },
-          stroke: {
-            colors: ["#6c63ff", "#ff6584"]
-          },
-          markers: {
-            size: 0
-          },
-          plotOptions: {
-            radar: {
-              polygons: {
-                strokeColor: '#333333',
-                fill: {
-                    colors: ['transparent', 'transparent']
-                }
-              }
-            }
-          },
-          xaxis: {
-            categories: ["danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"],
-          },
-          yaxis: {
-            show: false
-          },
-          legend: {
-            labels: {
-              colors: ["white"],
-              useSeriesColors: true
+  const chartConfig = {
+    options: {
+      chart: {
+        id: 'basic-bar',
+        background: 'transparent',
+        toolbar: {
+          show: false
+        }
+      },
+      colors: ['#6c63ff', '#ff6584'],
+      fill: {
+        opacity: 0.2,
+      },
+      stroke: {
+      },
+      markers: {
+        size: 0
+      },
+      plotOptions: {
+        radar: {
+          polygons: {
+            strokeColor: '#333333',
+            fill: {
+              colors: ['transparent', 'transparent']
             }
           }
-        },
-        series: [
-          {
-            name: "Actual Song",
-            data: [.1, .4, .45, .50, .49, .60, .70, .3]
-          },
-          {
-            name: "Suggestion Average",
-            data: [.10, .50, .22, .11, .70, .90, .30, .6]
-          }
-        ]
-      };
-    return (
-        <Chart
-              options={chartConfig.options}
-              series={chartConfig.series}
-              type="radar"
-              width="100%"
-              style={styles.radar}
-            />
-    )
-}
+        }
+      },
+      xaxis: {
+        categories: features
+      },
+      yaxis: {
+        show: false
+      },
+      legend: {
+        labels: {
+          colors: ['white'],
+          useSeriesColors: true
+        }
+      }
+    },
+    series: [
+      {
+        name: 'Actual Song',        
+        data: songSerie
+      },
+      {
+        name: 'Favorites Average',
+        data: aveSerie
+      }
+    ]
+  };
+  console.log(">>>>>", songSerie, aveSerie);
+  
+  return (
+    <Chart
+      options={chartConfig.options}
+      series={chartConfig.series}
+      type='radar'
+      width='100%'
+      style={styles.radar}
+    />
+  );
+};
 
-export default RadarChart
+export default RadarChart;

@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import {FavoritesContext} from "../contexts/FavoritesContext";
 import {UserContext} from "../contexts/UserContext";
 import {withStyles, makeStyles} from "@material-ui/core/styles";
@@ -12,6 +12,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import TablePagination from "@material-ui/core/TablePagination";
 import PlusSign from "../svg/PlusSign";
 import MinusSign from "../svg/MinusSign";
 import List from "@material-ui/core/List";
@@ -21,6 +22,8 @@ import {axiosWithUserAuth} from "../utils/axiosWithAuth";
 import ArrowDown from "../svg/ArrowDown";
 import Grid from "@material-ui/core/Grid";
 import ArrowUp from "../svg/ArrowUp";
+import NextButton from "../svg/NextButton";
+import PrevButton from "../svg/PrevButton";
 import RadarChart from "./RadarChart";
 
 const StyledTableCell = withStyles((theme) => ({
@@ -53,12 +56,15 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 function createData(id, name, artist, album, image_url) {
-  return {id, name, album, artist, image_url};
+  return {id, name, artist, album, image_url};
 }
 
 const useStyle = makeStyles(() => ({
   normal: {
     overflowY: "hidden",
+    "& .MuiTablePagination-root": {
+      color: "white !important",
+    },
   },
   container: {
     maxHeight: "80%",
@@ -73,6 +79,12 @@ const useStyle = makeStyles(() => ({
     },
     "&::-webkit-scrollbar-thumb:hover": {
       background: "#ff6584",
+    },
+    "&::-webkit-scrollbar-thumb:hover": {
+      background: "#ff6584",
+    },
+    "& .MuiTablePagination-root": {
+      color: "white",
     },
   },
   normalRow: {
@@ -91,7 +103,15 @@ function ListComponent(props) {
     results,
     suggestions,
   } = useContext(FavoritesContext);
-  const {userId} = useContext(UserContext);
+
+  const [toShow, setToShow] = useState([]);
+  const [page, setPage] = useState(0);
+
+  const {userId, setUserId} = useContext(UserContext);
+
+  useEffect(() => {
+    setToShow(results.slice(10 * page, 10 * page + 10));
+  }, [results, page]);
 
   let dataList = [];
   if (props.type === "favorite") {
@@ -100,11 +120,19 @@ function ListComponent(props) {
     if (props.type === "suggestions") {
       dataList = suggestions;
     } else {
-      dataList = results;
+      dataList = toShow;
     }
   }
 
   const classes = useStyle();
+
+  const changePage = (direction) => {
+    if (direction === "next") {
+      if (page < Math.ceil(results.length / 10) - 1) setPage(page + 1);
+    } else {
+      if (page > 0) setPage(page - 1);
+    }
+  };
 
   const rows = dataList.map((result) => {
     return createData(
@@ -144,7 +172,7 @@ function ListComponent(props) {
         <TableBody>
           {rows.map((row, index) =>
             props.type === "suggestions" ? (
-              <Row key={row} row={row} dataList={dataList} index={index} />
+              <Row key={row.id} row={row} dataList={dataList} index={index} />
             ) : (
               <>
                 <StyledTableRow key={row.id} className={classes.normalRow}>
@@ -181,6 +209,28 @@ function ListComponent(props) {
                 </StyledTableRow>
               </>
             )
+          )}
+          {toShow.length != 0 &&
+          props.type != "favorite" &&
+          props.type != "suggestions" ? (
+            <div style={{color: "white"}}>
+              <div
+                onClick={() => {
+                  changePage("back");
+                }}
+              >
+                <NextButton>Back</NextButton>
+              </div>{" "}
+              <div
+                onClick={() => {
+                  changePage("next");
+                }}
+              >
+                <PrevButton>Next</PrevButton>
+              </div>
+            </div>
+          ) : (
+            ""
           )}
         </TableBody>
       </Table>
@@ -255,9 +305,13 @@ const useRowStyles = makeStyles({
 function Row(props) {
   const {row, dataList, index} = props;
   const [open, setOpen] = useState(false);
-  const {favorites, setFavorites, results, addFavorite} = useContext(
-    FavoritesContext
-  );
+  const {
+    favorites,
+    setFavorites,
+    results,
+    addFavorite,
+    favAverages,
+  } = useContext(FavoritesContext);
   const classes = useRowStyles();
   console.log(dataList[index]);
   let features = [
@@ -270,6 +324,8 @@ function Row(props) {
     "tempo",
     "instrumentalness",
   ];
+
+  console.log("favAverages", favAverages);
 
   return (
     <>
@@ -305,26 +361,25 @@ function Row(props) {
               <Grid container>
                 <Grid item xs={2} className={classes.gridPicture}>
                   <img src={row.image_url} alt={`Album: ${row.album}`} />
-                  <Typography variant="subtitle2" gutterBottom>
-                    {row.album}
-                  </Typography>
                 </Grid>
                 <Grid item xs={4} className={classes.gridMiddle}>
                   <Typography variant="subtitle1" component="div">
                     Features
                   </Typography>
                   <List>
-                    {features.map((el) => (
+                    {features.map((el, i) => (
                       <ListItem>
                         <ListItemText
                           primary={el}
                           secondary={
                             <>
                               <span className="song">
-                                {dataList[index][el]}
+                                {dataList[index][el].toFixed(3)}
                               </span>
                               <span className="total">
-                                {dataList[index][el]}
+                                {favAverages[i].value === 0
+                                  ? 0
+                                  : favAverages[i].value.toFixed(3)}
                               </span>
                             </>
                           }
@@ -334,7 +389,11 @@ function Row(props) {
                   </List>
                 </Grid>
                 <Grid item xs={6}>
-                  <RadarChart />
+                  <RadarChart
+                    songData={dataList[index]}
+                    averages={favAverages}
+                    features={features}
+                  />
                 </Grid>
               </Grid>
             </Box>

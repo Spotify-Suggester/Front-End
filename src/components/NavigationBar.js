@@ -53,14 +53,6 @@ const NavigationBar = (props) => {
         </Button>
         <Button
           size='large'
-          onClick={() => {
-            props.setIsShowing('mood');
-          }}
-        >
-          Search by Mood
-        </Button>
-        <Button
-          size='large'
           href='https://quizzical-goodall-28a278.netlify.app/'
           target='_blank'
         >

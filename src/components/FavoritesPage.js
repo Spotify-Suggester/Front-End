@@ -36,26 +36,82 @@ const useStyles = makeStyles(() => ({
 
 const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([]);
+  const [favAverages, setFavAverages] = useState([]);
   const [results, setResults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
-  const { userId, setUserId } = useContext(UserContext);
   const [isShowing, setIsShowing] = useState('search');
-
+  const { userId, setUserId } = useContext(UserContext);
   const classes = useStyles();
 
   useEffect(() => {
     console.log('userId', userId);
+    if (!userId) {
+      setUserId(localStorage.getItem('userId'));
+    }
     axiosWithUserAuth()
       .get(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`
       )
-      .then((res) => setFavorites(res.data.favorite_songs))
+      .then((res) => {
+        setFavorites(res.data.favorite_songs);
+        // calcAverages(res.data.favorite_songs);
+      })
       .catch((err) => console.error('err', err.response));
-  }, []);
+  }, [userId]);
+
+  useEffect(() => {
+    calcAverages();
+  }, [favorites]);
+
+  const calcAverages = () => {
+    let result = [
+      {
+        feature: 'danceability',
+        value: 0
+      },
+      {
+        feature: 'energy',
+        value: 0
+      },
+
+      {
+        feature: 'liveness',
+        value: 0
+      },
+      {
+        feature: 'loudness',
+        value: 0
+      },
+      {
+        feature: 'speechiness',
+        value: 0
+      },
+      {
+        feature: 'valence',
+        value: 0
+      },
+      {
+        feature: 'tempo',
+        value: 0
+      },
+      {
+        feature: 'instrumentalness',
+        value: 0
+      }
+    ];
+
+    favorites.forEach((song) => {
+      result.forEach((item, index) => {
+        result[index].value +=
+          parseFloat(song[item.feature]) / favorites.length;
+      });
+    });
+    console.log(result);
+    setFavAverages(result);
+  };
 
   const addFavorite = (song) => {
     if (!favorites.includes(song)) {
-      // setFavorites([...favorites, song]);
       axiosWithUserAuth()
         .post(
           `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`,
@@ -70,7 +126,6 @@ const FavoritesPage = () => {
   };
 
   const removeFavorite = (song) => {
-    // setFavorites(favorites.filter((item) => item.id != song.id));
     axiosWithUserAuth()
       .delete(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites/${song.id}`
@@ -92,7 +147,8 @@ const FavoritesPage = () => {
         suggestions,
         setSuggestions,
         addFavorite,
-        removeFavorite
+        removeFavorite,
+        favAverages
       }}
     >
       <Container className={classes.container} maxWidth='full'>
@@ -105,8 +161,6 @@ const FavoritesPage = () => {
               <SearchForm />
               <ListComponent />
             </>
-          ) : isShowing === 'mood' ? (
-            <SearchMood />
           ) : (
             <SuggestionList />
           )}
