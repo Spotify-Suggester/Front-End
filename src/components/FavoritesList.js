@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiButton-contained.Mui-disabled': {
       color: 'rgba(0, 0, 0, .45)'
-    },
+    }
   },
   header: {
     fontWeight: 300,
@@ -62,7 +62,7 @@ const FavoritesList = (props) => {
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
       <Button
-        disabled={favorites.length <= 10? true: false}
+        disabled={favorites.length <= 5 ? true : false}
         variant='contained'
         size='large'
         onClick={() => {
