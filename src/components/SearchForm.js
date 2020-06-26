@@ -151,24 +151,25 @@ const SearchForm = () => {
   return (
     <Container maxWidth={false} className={classes.container}>
       <Grid item xs={12} md={12} className={classes.formContainer}>
-        <Box className={classes.form}>
-          <TextField
-            name='searchInput'
-            id='searchInput'
-            label='Search for your favorite songs or artists'
-            fullWidth
-            onChange={inputChange}
-            value={searchTerm.searchInput}
-          />
-          <Button
-            variant='contained'
-            color='secondary'
-            disabled={isButtonDisabled}
-            type='submit'
-            onClick={formSubmit}
-          >
-            Search
-          </Button>
+        <Box >
+          <form onSubmit={formSubmit} className={classes.form}>
+            <TextField
+              name='searchInput'
+              id='searchInput'
+              label='Search for your favorite songs or artists'
+              fullWidth
+              onChange={inputChange}
+              value={searchTerm.searchInput}
+            />
+            <Button
+              variant='contained'
+              color='secondary'
+              disabled={isButtonDisabled}
+              type='submit'
+            >
+              Search
+            </Button>
+          </form>
         </Box>
         {error.searchInput.length > 0 ? <p class>{error.searchInput}</p> : null}
       </Grid>
