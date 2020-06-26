@@ -125,7 +125,7 @@ const SearchForm = () => {
     e.preventDefault();
     axiosWithSpotifyAuth()
       .get(
-        `https://api.spotify.com/v1/search?q=${searchString}&type=track%2Cartist&market=US&limit=35&offset=5`
+        `https://api.spotify.com/v1/search?q=${searchString}&type=track%2Cartist&market=US&limit=50&offset=5`
       )
       .then((res) => {
         const data = res.data.tracks.items;

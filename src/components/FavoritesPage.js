@@ -163,14 +163,6 @@ const FavoritesPage = () => {
             </Route>
 
           </Switch>
-          {/* {isShowing === 'search' ? (
-            <>
-              <SearchForm />
-              <ListComponent />
-            </>
-          ) : (
-            <Suggestions />
-          )} */}
         </Container>
       </Container>
     </FavoritesContext.Provider>
