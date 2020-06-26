@@ -88,7 +88,6 @@ const SearchForm = () => {
     formSchema.isValid(searchTerm).then((valid) => {
       setIsButtonDisabled(!valid);
     });
-    console.log('searchTerm', searchTerm);
   }, [searchTerm]);
 
   const validateChange = (e) => {
