@@ -6,7 +6,6 @@ import { Container, Grid, Box } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
-import ListComponent from './ListComponent';
 import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 
 import { FavoritesContext } from '../contexts/FavoritesContext';

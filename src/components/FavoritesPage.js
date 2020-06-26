@@ -34,7 +34,6 @@ const FavoritesPage = () => {
   const [favAverages, setFavAverages] = useState([]);
   const [results, setResults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
-  const [isShowing, setIsShowing] = useState('search');
   const [page, setPage] = useState(0);
 
   const { userId, setUserId } = useContext(UserContext);
@@ -148,8 +147,8 @@ const FavoritesPage = () => {
       }}
     >
       <Container className={classes.container} maxWidth='full'>
-        <NavigationBar setIsShowing={setIsShowing} />
-        <FavoritesList setIsShowing={setIsShowing} />
+        <NavigationBar/>
+        <FavoritesList/>
         <Container className={classes.emptyContainer} />
         <Container className={classes.mainContainer}>
 
