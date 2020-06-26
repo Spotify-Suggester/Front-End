@@ -39,9 +39,8 @@ const FavoritesPage = () => {
   const [favAverages, setFavAverages] = useState([]);
   const [results, setResults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
-  const { userId, setUserId } = useContext(UserContext);
   const [isShowing, setIsShowing] = useState('search');
-
+  const { userId, setUserId } = useContext(UserContext);
   const classes = useStyles();
 
   useEffect(() => {
@@ -55,12 +54,16 @@ const FavoritesPage = () => {
       )
       .then((res) => {
         setFavorites(res.data.favorite_songs);
-        calcAverages(res.data.favorite_songs);
+        // calcAverages(res.data.favorite_songs);
       })
       .catch((err) => console.error('err', err.response));
   }, [userId]);
 
-  const calcAverages = (favs) => {
+  useEffect(() => {
+    calcAverages();
+  }, [favorites]);
+
+  const calcAverages = () => {
     let result = [
       {
         feature: 'danceability',
@@ -97,9 +100,10 @@ const FavoritesPage = () => {
       }
     ];
 
-    favs.forEach((song) => {
+    favorites.forEach((song) => {
       result.forEach((item, index) => {
-        result[index].value += parseFloat(song[item.feature]) / favs.length;
+        result[index].value +=
+          parseFloat(song[item.feature]) / favorites.length;
       });
     });
     console.log(result);
@@ -108,7 +112,6 @@ const FavoritesPage = () => {
 
   const addFavorite = (song) => {
     if (!favorites.includes(song)) {
-      // setFavorites([...favorites, song]);
       axiosWithUserAuth()
         .post(
           `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`,
@@ -117,14 +120,12 @@ const FavoritesPage = () => {
         .then((res) => {
           console.log('post response', res);
           setFavorites(res.data.favorite_songs);
-          calcAverages(res.data.favorite_songs);
         })
         .catch((err) => console.error('post error', err.message));
     }
   };
 
   const removeFavorite = (song) => {
-    // setFavorites(favorites.filter((item) => item.id != song.id));
     axiosWithUserAuth()
       .delete(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites/${song.id}`
@@ -132,7 +133,6 @@ const FavoritesPage = () => {
       .then((res) => {
         console.log('delete response', res);
         setFavorites(res.data.favorite_songs);
-        calcAverages(res.data.favorite_songs);
       })
       .catch((err) => console.error('delete error', err));
   };
