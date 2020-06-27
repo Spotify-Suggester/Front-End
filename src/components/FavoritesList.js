@@ -71,20 +71,22 @@ const FavoritesList = ({ setIsShowing }) => {
     <Container className={classes.container}>
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
-      <Link to="/favorites/suggestions"><Button
-        disabled={favorites.length < 5 ? true : false}
-        variant='contained'
-        size='large'
-        onClick={() => {
-          getSuggestions();
-        }}
-      >
-        {favorites.length < 5
-          ? `Please add ${5 - favorites.length} more ${
-              5 - favorites.length === 1 ? 'Favorite' : 'Favorites'
-            }`
-          : 'Suggest Songs'}
-      </Button></Link>
+      <Link to='/favorites/suggestions'>
+        <Button
+          disabled={favorites.length < 5 ? true : false}
+          variant='contained'
+          size='large'
+          onClick={() => {
+            getSuggestions();
+          }}
+        >
+          {favorites.length < 5
+            ? `Please add ${5 - favorites.length} more ${
+                5 - favorites.length === 1 ? 'Favorite' : 'Favorites'
+              }`
+            : 'Suggest Songs'}
+        </Button>
+      </Link>
     </Container>
   );
 };

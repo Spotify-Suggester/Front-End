@@ -44,11 +44,9 @@ const NavigationBar = ({ setIsShowing }) => {
         <Typography variant='h6' className={classes.title}>
           Spotify Suggester
         </Typography>
-        <Link to="/favorites"><Button
-          size='large'
-        >
-          Search by Song/Artist
-        </Button></Link>
+        <Link to='/favorites'>
+          <Button size='large'>Search by Song/Artist</Button>
+        </Link>
         <Button
           size='large'
           href='https://quizzical-goodall-28a278.netlify.app/'

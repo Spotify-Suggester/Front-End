@@ -147,21 +147,19 @@ const FavoritesPage = () => {
       }}
     >
       <Container className={classes.container} maxWidth='full'>
-        <NavigationBar/>
-        <FavoritesList/>
+        <NavigationBar />
+        <FavoritesList />
         <Container className={classes.emptyContainer} />
         <Container className={classes.mainContainer}>
-
-        <Switch>
-            <Route exact path="/favorites">
-              <SearchForm />
-              <ListComponent />
-            </Route>
-            <Route exact path="/favorites/suggestions">
+          <Switch>
+            <Route path='/favorites/suggestions'>
               <Suggestions />
               <ListComponent type='suggestions' />
             </Route>
-
+            <Route path='/favorites'>
+              <SearchForm />
+              <ListComponent />
+            </Route>
           </Switch>
         </Container>
       </Container>
