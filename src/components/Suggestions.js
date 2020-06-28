@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
@@ -70,22 +70,9 @@ const Suggestions = () => {
       min: 0,
       steps: 0.1
     },
-    {
-      feature: 'instrumentalness',
-      value: 0,
-      max: 1,
-      min: 0,
-      steps: 0.1
-    },
+    
     {
       feature: 'liveness',
-      value: 0,
-      max: 1,
-      min: 0,
-      steps: 0.1
-    },
-    {
-      feature: 'acousticness',
       value: 0,
       max: 1,
       min: 0,
@@ -113,6 +100,20 @@ const Suggestions = () => {
       steps: 0.1
     },
     {
+      feature: 'acousticness',
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
+    },
+    {
+      feature: 'instrumentalness',
+      value: 0,
+      max: 1,
+      min: 0,
+      steps: 0.1
+    },
+    {
       feature: 'tempo',
       value: 0,
       max: 250,
@@ -121,7 +122,7 @@ const Suggestions = () => {
     }
   ]);
 
-  const { setSuggestions } = useContext(FavoritesContext);
+  const { setSuggestions, favAverages, setLoading } = useContext(FavoritesContext);
   const { userId } = useContext(UserContext);
 
   const handleChange = (index, value) => {
@@ -133,7 +134,8 @@ const Suggestions = () => {
   const updateSuggestions = () => {
     let mood = {};
     features.forEach((item) => (mood[item.feature] = item.value));
-
+    setLoading(true)
+    setSuggestions([])
     axiosWithUserAuth()
       .post(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,
@@ -141,10 +143,15 @@ const Suggestions = () => {
       )
       .then((res) => {
         setSuggestions(res.data.recommended_songs);
+        setLoading(false)
       })
-      .catch((err) => console.error('get err', err.message));
+      .catch((err) => {
+        console.error('get err', err.message)
+        setLoading(false)
+    });
   };
 
+ 
   return (
     <>
     <Container maxWidth={false} className={classes.container}>
@@ -156,7 +163,7 @@ const Suggestions = () => {
                 {features.feature}
               </Typography>
               <Slider
-                defaultValue={features.value}
+                defaultValue={favAverages[index].value.toFixed(2)}
                 aria-labelledby='discrete-slider'
                 valueLabelDisplay='auto'
                 step={features.steps}

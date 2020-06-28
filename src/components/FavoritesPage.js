@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Route, Switch } from 'react-router-dom';
 import FavoritesList from './FavoritesList';
 import SearchForm from './SearchForm';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import NavigationBar from './NavigationBar';
 import ListComponent from './ListComponent';
 import Suggestions from './Suggestions';
@@ -35,25 +36,13 @@ const FavoritesPage = () => {
   const [results, setResults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [page, setPage] = useState(0);
+  const [Loading, setLoading] = useState(false)
 
   const { userId, setUserId } = useContext(UserContext);
 
   const classes = useStyles();
 
-  useEffect(() => {
-    if (!userId) {
-      setUserId(localStorage.getItem('userId'));
-    }
 
-    axiosWithUserAuth()
-      .get(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`
-      )
-      .then((res) => {
-        setFavorites(res.data.favorite_songs);
-      })
-      .catch((err) => console.error('err', err.message));
-  }, [userId]);
 
   useEffect(() => {
     calcAverages();
@@ -91,6 +80,10 @@ const FavoritesPage = () => {
       },
       {
         feature: 'instrumentalness',
+        value: 0
+      },
+      {
+        feature: 'tempo',
         value: 0
       }
     ];
@@ -143,7 +136,9 @@ const FavoritesPage = () => {
         removeFavorite,
         favAverages,
         page,
-        setPage
+        setPage,
+        Loading,
+        setLoading
       }}
     >
       <Container className={classes.container} maxWidth='full'>
@@ -156,10 +151,26 @@ const FavoritesPage = () => {
             <Route exact path="/favorites">
               <SearchForm />
               <ListComponent />
+              { Loading ? <CircularProgress
+                style={{
+                  position: "relative",
+                  left: "48%",
+                  margin: '50px auto',
+                  color: '#FF6584'
+                }}
+              /> : null}
             </Route>
             <Route exact path="/favorites/suggestions">
               <Suggestions />
               <ListComponent type='suggestions' />
+              { Loading ? <CircularProgress
+                style={{
+                  position: "relative",
+                  left: "48%",
+                  margin: '50px auto',
+                  color: '#FF6584'
+                }}
+              /> : null}
             </Route>
 
           </Switch>

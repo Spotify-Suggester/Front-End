@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 import ListComponent from './ListComponent';
 import { axiosWithUserAuth } from '../utils/axiosWithAuth';
@@ -42,35 +43,60 @@ const useStyles = makeStyles(() => ({
 const FavoritesList = ({ setIsShowing }) => {
   const classes = useStyles();
 
-  const { userId } = useContext(UserContext);
-  const { favorites, setSuggestions } = useContext(FavoritesContext);
+  const { userId, setUserId  } = useContext(UserContext);
+  const { favorites, setSuggestions, favAverages, setFavorites, setLoading } = useContext(FavoritesContext);
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (!userId) {
+      setUserId(localStorage.getItem('userId'));
+    }
+    setIsLoading(true)
+    axiosWithUserAuth()
+      .get(
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`
+      )
+      .then((res) => {
+        setFavorites(res.data.favorite_songs);
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        setIsLoading(false)
+        console.error('err', err.message)
+      });
+  }, [userId]);
 
   const getSuggestions = () => {
+    let valuesToSend = {}
+    favAverages.forEach((item) => (valuesToSend[item.feature] = item.value));
+    setLoading(true)
     axiosWithUserAuth()
       .post(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,
-        {
-          danceability: 0,
-          energy: 0,
-          instrumentalness: 0,
-          liveness: 0,
-          acousticness: 0,
-          loudness: 0,
-          speechiness: 0,
-          valence: 0,
-          tempo: 0
-        }
+        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,valuesToSend
       )
       .then((res) => {
         setSuggestions(res.data.recommended_songs);
+        setLoading(false)
       })
-      .catch((err) => console.error('get err', err.message));
+      .catch((err) => {
+        console.error('get err', err.message)
+        setLoading(false)
+    });
   };
 
   return (
     <Container className={classes.container}>
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
+      { isLoading ? <CircularProgress
+        style={{
+          position: 'absolute',
+          left: '45%',
+          marginTop: '50px',
+          color: '#FF6584'
+        }}
+      /> : null}
+      
       <Link to="/favorites/suggestions"><Button
         disabled={favorites.length < 5 ? true : false}
         variant='contained'

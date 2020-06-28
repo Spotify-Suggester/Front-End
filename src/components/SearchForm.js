@@ -82,7 +82,7 @@ const SearchForm = () => {
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-  const { setResults, setPage } = useContext(FavoritesContext);
+  const { setResults, setPage, setLoading } = useContext(FavoritesContext);
 
   useEffect(() => {
     formSchema.isValid(searchTerm).then((valid) => {
@@ -123,6 +123,7 @@ const SearchForm = () => {
     const searchString = searchTerm.searchInput.replace(' ', '%20');
 
     e.preventDefault();
+    setLoading(true)
     axiosWithSpotifyAuth()
       .get(
         `https://api.spotify.com/v1/search?q=${searchString}&type=track%2Cartist&market=US&limit=50&offset=5`
@@ -140,8 +141,12 @@ const SearchForm = () => {
           };
         });
         setResults(songs);
+        setLoading(false)
       })
-      .catch((err) => console.error('spotify get req error', err.message));
+      .catch((err) => {
+        console.error('spotify get req error', err.message)
+        setLoading(false)
+    });
 
     setSearchTerm({
       searchInput: ''
