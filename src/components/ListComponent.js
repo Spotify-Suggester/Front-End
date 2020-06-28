@@ -1,6 +1,4 @@
 import React, {useState, useContext, useEffect} from "react";
-import {FavoritesContext} from "../contexts/FavoritesContext";
-import {UserContext} from "../contexts/UserContext";
 import {withStyles, makeStyles} from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -12,19 +10,20 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TablePagination from "@material-ui/core/TablePagination";
 import PlusSign from "../svg/PlusSign";
 import MinusSign from "../svg/MinusSign";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import {axiosWithUserAuth} from "../utils/axiosWithAuth";
+
 import ArrowDown from "../svg/ArrowDown";
 import Grid from "@material-ui/core/Grid";
 import ArrowUp from "../svg/ArrowUp";
 import NextButton from "../svg/NextButton";
 import PrevButton from "../svg/PrevButton";
 import RadarChart from "./RadarChart";
+
+import {FavoritesContext} from "../contexts/FavoritesContext";
 
 const StyledTableCell = withStyles((theme) => ({
   root: {
@@ -111,30 +110,28 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
-function ListComponent(props) {
+function ListComponent({type}) {
   const {
     favorites,
-    setFavorites,
     addFavorite,
     removeFavorite,
     results,
     suggestions,
+    page,
+    setPage,
   } = useContext(FavoritesContext);
 
   const [toShow, setToShow] = useState([]);
-  const [page, setPage] = useState(0);
-
-  const {userId, setUserId} = useContext(UserContext);
 
   useEffect(() => {
     setToShow(results.slice(10 * page, 10 * page + 10));
   }, [results, page]);
 
   let dataList = [];
-  if (props.type === "favorite") {
+  if (type === "favorite") {
     dataList = favorites;
   } else {
-    if (props.type === "suggestions") {
+    if (type === "suggestions") {
       dataList = suggestions;
     } else {
       dataList = toShow;
@@ -164,21 +161,18 @@ function ListComponent(props) {
   return (
     <>
       <TableContainer
-        className={
-          props.type === "favorite" ? classes.container : classes.normal
-        }
+        className={type === "favorite" ? classes.container : classes.normal}
       >
         <Table stickyHeader aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell></StyledTableCell>
-
               <StyledTableCell>Song Name</StyledTableCell>
-              {props.type !== "favorite" ? (
+              {type !== "favorite" ? (
                 <>
                   <StyledTableCell align="right">Artist</StyledTableCell>
                   <StyledTableCell align="right">Album</StyledTableCell>
-                  {props.type === "suggestions" ? (
+                  {type === "suggestions" ? (
                     <StyledTableCell></StyledTableCell>
                   ) : (
                     ""
@@ -191,13 +185,13 @@ function ListComponent(props) {
           </TableHead>
           <TableBody>
             {rows.map((row, index) =>
-              props.type === "suggestions" ? (
+              type === "suggestions" ? (
                 <Row key={row.id} row={row} dataList={dataList} index={index} />
               ) : (
                 <>
                   <StyledTableRow key={row.id} className={classes.normalRow}>
                     <StyledTableCell component="th" scope="row">
-                      {props.type !== "favorite" ? (
+                      {type !== "favorite" ? (
                         <span
                           onClick={() => {
                             addFavorite(dataList[index]);
@@ -214,7 +208,7 @@ function ListComponent(props) {
                     <StyledTableCell component="th" scope="row">
                       {row.name}
                     </StyledTableCell>
-                    {props.type !== "favorite" ? (
+                    {type !== "favorite" ? (
                       <>
                         <StyledTableCell align="right">
                           {row.artist}
@@ -233,9 +227,7 @@ function ListComponent(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {toShow.length != 0 &&
-      props.type != "favorite" &&
-      props.type != "suggestions" ? (
+      {toShow.length !== 0 && type !== "favorite" && type !== "suggestions" ? (
         <div className={classes.paginationBar}>
           <div
             onClick={() => {
@@ -328,18 +320,13 @@ const useRowStyles = makeStyles({
   },
 });
 
-function Row(props) {
-  const {row, dataList, index} = props;
+function Row({row, dataList, index}) {
   const [open, setOpen] = useState(false);
-  const {
-    favorites,
-    setFavorites,
-    results,
-    addFavorite,
-    favAverages,
-  } = useContext(FavoritesContext);
+
+  const {addFavorite, favAverages} = useContext(FavoritesContext);
+
   const classes = useRowStyles();
-  console.log(dataList[index]);
+
   let features = [
     "danceability",
     "energy",
@@ -350,8 +337,6 @@ function Row(props) {
     "acousticness",
     "instrumentalness",
   ];
-
-  console.log("favAverages", favAverages);
 
   return (
     <>
@@ -400,12 +385,12 @@ function Row(props) {
                           secondary={
                             <>
                               <span className="song">
-                                {dataList[index][el].toFixed(3)}
+                                {dataList[index][el].toFixed(2)}
                               </span>
                               <span className="total">
                                 {favAverages[i].value === 0
                                   ? 0
-                                  : favAverages[i].value.toFixed(3)}
+                                  : favAverages[i].value.toFixed(2)}
                               </span>
                             </>
                           }

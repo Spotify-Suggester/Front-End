@@ -14,3 +14,7 @@ body {
   color: white;
   font-family: 'Raleway', sans-serif !important;
 }
+
+a {
+  text-decoration: none !important;
+}

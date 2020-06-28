@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 
 const useStyles = makeStyles(() => ({
@@ -26,7 +27,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const NavigationBar = (props) => {
+const NavigationBar = ({ setIsShowing }) => {
   const { setUserId } = useContext(UserContext);
   const history = useHistory();
   const classes = useStyles();
@@ -43,14 +44,11 @@ const NavigationBar = (props) => {
         <Typography variant='h6' className={classes.title}>
           Spotify Suggester
         </Typography>
-        <Button
+        <Link to="/favorites"><Button
           size='large'
-          onClick={() => {
-            props.setIsShowing('search');
-          }}
         >
           Search by Song/Artist
-        </Button>
+        </Button></Link>
         <Button
           size='large'
           href='https://quizzical-goodall-28a278.netlify.app/'
