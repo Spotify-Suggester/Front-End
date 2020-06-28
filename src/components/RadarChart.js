@@ -65,7 +65,7 @@ const RadarChart = (props) => {
     },
     series: [
       {
-        name: 'Actual Song',
+        name: 'Suggestion',
         data: songSerie
       },
       {

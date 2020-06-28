@@ -388,9 +388,7 @@ function Row({row, dataList, index}) {
                                 {dataList[index][el].toFixed(2)}
                               </span>
                               <span className="total">
-                                {favAverages[i].value === 0
-                                  ? 0
-                                  : favAverages[i].value.toFixed(2)}
+                                {favAverages[i].value.toFixed(2)}
                               </span>
                             </>
                           }
