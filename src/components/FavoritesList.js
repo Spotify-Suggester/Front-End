@@ -70,6 +70,7 @@ const FavoritesList = ({ setIsShowing }) => {
     let valuesToSend = {}
     favAverages.forEach((item) => (valuesToSend[item.feature] = item.value));
     setLoading(true)
+    setSuggestions([])
     axiosWithUserAuth()
       .post(
         `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,valuesToSend
