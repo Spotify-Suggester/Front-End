@@ -156,7 +156,7 @@ const SearchForm = () => {
   return (
     <Container maxWidth={false} className={classes.container}>
       <Grid item xs={12} md={12} className={classes.formContainer}>
-        <Box >
+        <Box>
           <form onSubmit={formSubmit} className={classes.form}>
             <TextField
               name='searchInput'

@@ -15,10 +15,10 @@ const useStyle = makeStyles(() => ({
   paper: {
     display: 'flex',
     flexWrap: 'wrap',
-    margin: "-30px 0 20px",
-    padding: " 20px 10px 0px",
+    margin: '-30px 0 20px',
+    padding: ' 20px 10px 0px',
     position: 'relative',
-    width: "100%",
+    width: '100%',
     color: 'white',
     border: '1px solid #6c63FF',
     background: 'rgba(0,0,0,.45)',
@@ -26,7 +26,7 @@ const useStyle = makeStyles(() => ({
       backgroundColor: '#6C63FF',
       color: 'white',
       maxHeight: '50px',
-      margin: "-5px 2%",
+      margin: '-5px 2%',
       width: '16%',
       '&:hover': {
         background: '#4a41d4'
@@ -40,16 +40,16 @@ const useStyle = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     margin: '0 2% 15px',
-    width: "16%",
-    "& p": {
-      marginBottom: "-5px"
+    width: '16%',
+    '& p': {
+      marginBottom: '-5px'
     }
   },
   container: {
     margin: '0',
     padding: '0',
-    width: "100%"
-  },
+    width: '100%'
+  }
 }));
 
 const Suggestions = () => {
