@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { UserContext } from './contexts/UserContext';
+
 import Login from './components/Login';
 import PrivateRoute from './components/PrivateRoute';
 import FavoritesPage from './components/FavoritesPage';
 
+import { UserContext } from './contexts/UserContext';
+
 function App() {
   const [userId, setUserId] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [loginData, setLoginData] = useState({
-    username: '',
-    password: '',
-    confirmPassword: ''
-  });
 
   return (
     <div className='container'>
@@ -20,11 +16,7 @@ function App() {
         <UserContext.Provider
           value={{
             userId,
-            setUserId,
-            loginData,
-            setLoginData,
-            isLoading,
-            setIsLoading
+            setUserId
           }}
         >
           <Switch>

@@ -1,6 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { FavoritesContext } from '../contexts/FavoritesContext';
-import { UserContext } from '../contexts/UserContext';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -17,13 +15,15 @@ import MinusSign from '../svg/MinusSign';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { axiosWithUserAuth } from '../utils/axiosWithAuth';
+
 import ArrowDown from '../svg/ArrowDown';
 import Grid from '@material-ui/core/Grid';
 import ArrowUp from '../svg/ArrowUp';
-import NextButton from '../svg/NextButton'
-import PrevButton from '../svg/PrevButton'
+import NextButton from '../svg/NextButton';
+import PrevButton from '../svg/PrevButton';
 import RadarChart from './RadarChart';
+
+import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const StyledTableCell = withStyles((theme) => ({
   root: {
@@ -61,8 +61,8 @@ function createData(id, name, artist, album, image_url) {
 const useStyle = makeStyles(() => ({
   normal: {
     overflowY: 'hidden',
-    "& .MuiTablePagination-root" : {
-      color: "white !important"
+    '& .MuiTablePagination-root': {
+      color: 'white !important'
     }
   },
   container: {
@@ -79,8 +79,8 @@ const useStyle = makeStyles(() => ({
     '&::-webkit-scrollbar-thumb:hover': {
       background: '#ff6584'
     },
-    "& .MuiTablePagination-root": {
-      color:"white"
+    '& .MuiTablePagination-root': {
+      color: 'white'
     }
   },
   normalRow: {
@@ -89,50 +89,46 @@ const useStyle = makeStyles(() => ({
     }
   },
   paginationBar: {
-    display: "flex",
-    paddingTop: "10px",
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-    "& p": {
-      fontSize: "14px",
-      lineHeight: .6
+    display: 'flex',
+    paddingTop: '10px',
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    '& p': {
+      fontSize: '14px',
+      lineHeight: 0.6
     },
-    "& svg:hover path": {
-      cursor: "pointer",
-      fill: "#4a41d4"
+    '& svg:hover path': {
+      cursor: 'pointer',
+      fill: '#4a41d4'
     },
-    "& div:hover": {
-      cursor: "pointer"
+    '& div:hover': {
+      cursor: 'pointer'
     }
   }
 }));
 
-function ListComponent(props) {
+function ListComponent({ type }) {
   const {
     favorites,
-    setFavorites,
     addFavorite,
     removeFavorite,
     results,
-    suggestions
+    suggestions,
+    page,
+    setPage
   } = useContext(FavoritesContext);
 
-  const [toShow, setToShow] = useState([])
-  const [page, setPage] = useState(0)
-
-  const { userId, setUserId } = useContext(UserContext);
-
-
+  const [toShow, setToShow] = useState([]);
 
   useEffect(() => {
-    setToShow(results.slice(10*page,10*page+10))
-  },[results, page]);
+    setToShow(results.slice(10 * page, 10 * page + 10));
+  }, [results, page]);
 
   let dataList = [];
-  if (props.type === 'favorite') {
+  if (type === 'favorite') {
     dataList = favorites;
   } else {
-    if (props.type === 'suggestions') {
+    if (type === 'suggestions') {
       dataList = suggestions;
     } else {
       dataList = toShow;
@@ -142,16 +138,13 @@ function ListComponent(props) {
   const classes = useStyle();
 
   const changePage = (direction) => {
-  if(direction === "next") {
-    if(page < Math.ceil(results.length/10)-1)
-        setPage(page+1)
+    if (direction === 'next') {
+      if (page < Math.ceil(results.length / 10) - 1) setPage(page + 1);
     } else {
-      if(page > 0)
-      setPage(page-1)
+      if (page > 0) setPage(page - 1);
     }
-  }
+  };
 
-    
   const rows = dataList.map((result) => {
     return createData(
       result.id,
@@ -164,84 +157,98 @@ function ListComponent(props) {
 
   return (
     <>
-    <TableContainer
-      className={props.type === 'favorite' ? classes.container : classes.normal}
-    >
-      <Table stickyHeader aria-label='customized table'>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell></StyledTableCell>
-
-            <StyledTableCell>Song Name</StyledTableCell>
-            {props.type !== 'favorite' ? (
-              <>
-                <StyledTableCell align='right'>Artist</StyledTableCell>
-                <StyledTableCell align='right'>Album</StyledTableCell>
-                {props.type === 'suggestions' ? (
-                  <StyledTableCell></StyledTableCell>
-                ) : (
-                  ''
-                )}
-              </>
-            ) : (
-              ''
-            )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row, index) =>
-            props.type === 'suggestions' ? (
-              <Row key={row.id} row={row} dataList={dataList} index={index} />
-            ) : (
-              <>
-                <StyledTableRow key={row.id} className={classes.normalRow}>
-                  <StyledTableCell component='th' scope='row'>
-                    {props.type !== 'favorite' ? (
-                      <span
-                        onClick={() => {
-                          addFavorite(dataList[index]);
-                        }}
-                      >
-                        <PlusSign color='#ff6584' />
-                      </span>
-                    ) : (
-                      <span onClick={() => removeFavorite(row)}>
-                        <MinusSign color='#ff6584' />
-                      </span>
-                    )}
-                  </StyledTableCell>
-                  <StyledTableCell component='th' scope='row'>
-                    {row.name}
-                  </StyledTableCell>
-                  {props.type !== 'favorite' ? (
-                    <>
-                      <StyledTableCell align='right'>
-                        {row.artist}
-                      </StyledTableCell>
-                      <StyledTableCell align='right'>
-                        {row.album}
-                      </StyledTableCell>
-                    </>
+      <TableContainer
+        className={type === 'favorite' ? classes.container : classes.normal}
+      >
+        <Table stickyHeader aria-label='customized table'>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell></StyledTableCell>
+              <StyledTableCell>Song Name</StyledTableCell>
+              {type !== 'favorite' ? (
+                <>
+                  <StyledTableCell align='right'>Artist</StyledTableCell>
+                  <StyledTableCell align='right'>Album</StyledTableCell>
+                  {type === 'suggestions' ? (
+                    <StyledTableCell></StyledTableCell>
                   ) : (
                     ''
                   )}
-                </StyledTableRow>
-              </>
-            )
-          )}
-        </TableBody>
-      </Table>
-      
-    </TableContainer>
-    {(toShow.length != 0 && props.type != 'favorite' && props.type != 'suggestions') ? (
+                </>
+              ) : (
+                ''
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) =>
+              type === 'suggestions' ? (
+                <Row key={row.id} row={row} dataList={dataList} index={index} />
+              ) : (
+                <>
+                  <StyledTableRow key={row.id} className={classes.normalRow}>
+                    <StyledTableCell component='th' scope='row'>
+                      {type !== 'favorite' ? (
+                        <span
+                          onClick={() => {
+                            addFavorite(dataList[index]);
+                          }}
+                        >
+                          <PlusSign color='#ff6584' />
+                        </span>
+                      ) : (
+                        <span onClick={() => removeFavorite(row)}>
+                          <MinusSign color='#ff6584' />
+                        </span>
+                      )}
+                    </StyledTableCell>
+                    <StyledTableCell component='th' scope='row'>
+                      {row.name}
+                    </StyledTableCell>
+                    {type !== 'favorite' ? (
+                      <>
+                        <StyledTableCell align='right'>
+                          {row.artist}
+                        </StyledTableCell>
+                        <StyledTableCell align='right'>
+                          {row.album}
+                        </StyledTableCell>
+                      </>
+                    ) : (
+                      ''
+                    )}
+                  </StyledTableRow>
+                </>
+              )
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {toShow.length !== 0 && type !== 'favorite' && type !== 'suggestions' ? (
         <div className={classes.paginationBar}>
-          <div onClick={() => {changePage("next")}}><PrevButton size="40px" color="#6C63FF">Next</PrevButton></div>
-          <p>{`Page ${page+1} of ${Math.ceil(results.length/10)}`}</p>
-          <div onClick={() => {changePage("back")}}><NextButton size="40px" color="#6C63FF">Back</NextButton></div>
+          <div
+            onClick={() => {
+              changePage('next');
+            }}
+          >
+            <PrevButton size='40px' color='#6C63FF'>
+              Next
+            </PrevButton>
+          </div>
+          <p>{`Page ${page + 1} of ${Math.ceil(results.length / 10)}`}</p>
+          <div
+            onClick={() => {
+              changePage('back');
+            }}
+          >
+            <NextButton size='40px' color='#6C63FF'>
+              Back
+            </NextButton>
+          </div>
         </div>
-      ) : ('')
-        
-      }
+      ) : (
+        ''
+      )}
     </>
   );
 }
@@ -310,18 +317,13 @@ const useRowStyles = makeStyles({
   }
 });
 
-function Row(props) {
-  const { row, dataList, index } = props;
+function Row({ row, dataList, index }) {
   const [open, setOpen] = useState(false);
-  const {
-    favorites,
-    setFavorites,
-    results,
-    addFavorite,
-    favAverages
-  } = useContext(FavoritesContext);
+
+  const { addFavorite, favAverages } = useContext(FavoritesContext);
+
   const classes = useRowStyles();
-  console.log(dataList[index]);
+
   let features = [
     'danceability',
     'energy',
@@ -332,8 +334,6 @@ function Row(props) {
     'acousticness',
     'instrumentalness'
   ];
-
-  console.log('favAverages', favAverages);
 
   return (
     <>
@@ -385,12 +385,10 @@ function Row(props) {
                           secondary={
                             <>
                               <span className='song'>
-                                {dataList[index][el].toFixed(3)}
+                                {dataList[index][el].toFixed(2)}
                               </span>
                               <span className='total'>
-                                {favAverages[i].value === 0
-                                  ? 0
-                                  : favAverages[i].value.toFixed(3)}
+                                {favAverages[i].value.toFixed(2)}
                               </span>
                             </>
                           }
@@ -400,7 +398,11 @@ function Row(props) {
                   </List>
                 </Grid>
                 <Grid item xs={6}>
-                  <RadarChart songData={dataList[index]} averages={favAverages} features={features}/>
+                  <RadarChart
+                    songData={dataList[index]}
+                    averages={favAverages}
+                    features={features}
+                  />
                 </Grid>
               </Grid>
             </Box>

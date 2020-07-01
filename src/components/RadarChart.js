@@ -8,21 +8,20 @@ const styles = {
 };
 
 const RadarChart = (props) => {
-  const {songData, averages, features} = props;
-  const [songSerie, setSongSerie] = useState([])
-  const [aveSerie, setAveSerie] = useState([])
+  const { songData, averages, features } = props;
+  const [songSerie, setSongSerie] = useState([]);
+  const [aveSerie, setAveSerie] = useState([]);
 
-
-useEffect(() => {
-  const tempSongSerie = []
-  const tempAveSerie = []
-  features.forEach( (el, index) => {
-      tempSongSerie.push(songData[el].toFixed(3))
-      tempAveSerie.push(averages[index].value.toFixed(3))
-  })
-  setAveSerie(tempAveSerie)
-  setSongSerie(tempSongSerie)
-},[averages, features, songData])
+  useEffect(() => {
+    const tempSongSerie = [];
+    const tempAveSerie = [];
+    features.forEach((el, index) => {
+      tempSongSerie.push(songData[el].toFixed(3));
+      tempAveSerie.push(averages[index].value.toFixed(3));
+    });
+    setAveSerie(tempAveSerie);
+    setSongSerie(tempSongSerie);
+  }, [averages, features, songData]);
 
   const chartConfig = {
     options: {
@@ -35,10 +34,9 @@ useEffect(() => {
       },
       colors: ['#6c63ff', '#ff6584'],
       fill: {
-        opacity: 0.2,
+        opacity: 0.2
       },
-      stroke: {
-      },
+      stroke: {},
       markers: {
         size: 0
       },
@@ -67,7 +65,7 @@ useEffect(() => {
     },
     series: [
       {
-        name: 'Actual Song',        
+        name: 'Suggestion',
         data: songSerie
       },
       {
@@ -76,8 +74,8 @@ useEffect(() => {
       }
     ]
   };
-  console.log(">>>>>", songSerie, aveSerie);
-  
+  console.log('>>>>>', songSerie, aveSerie);
+
   return (
     <Chart
       options={chartConfig.options}

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import ListComponent from './ListComponent';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+
+import ListComponent from './ListComponent';
 
 const useStyle = makeStyles(() => ({
   paper: {
@@ -115,18 +116,6 @@ const Suggestions = () => {
   features.forEach((item) => (mood[item.feature] = item.value));
   console.log(JSON.stringify(mood));
 
-  // const getSuggestions = () => {
-  //   axiosWithUserAuth()
-  //     .get(
-  //       `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`
-  //     )
-  //     .then((res) => {
-  //       console.log('get res', res);
-  //       setSuggestions(res.data.recommended_songs);
-  //     })
-  //     .catch((err) => console.error('get err', err.message));
-  // };
-
   return (
     <>
       <Paper className={classes.paper} square>
@@ -151,7 +140,7 @@ const Suggestions = () => {
         ))}
         <Button size='large'>Update</Button>
       </Paper>
-      <ListComponent  type="suggestions"/>
+      <ListComponent type='suggestions' />
     </>
   );
 };

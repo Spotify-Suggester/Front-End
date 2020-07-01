@@ -1,13 +1,12 @@
-// Form that allows user to search for song by title, artist, genre, etc.
 import React, { useState, useContext, useEffect } from 'react';
 import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { Container, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  axiosWithSpotifyAuth
-} from '../utils/axiosWithAuth';
+
+import { axiosWithSpotifyAuth } from '../utils/axiosWithAuth';
+
 import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const useStyles = makeStyles(() => ({
@@ -67,7 +66,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const formSchema = Yup.object().shape({
-  searchInput: Yup.string().required('Search term is required')
+  searchInput: Yup.string().required(
+    'Please enter the name of a song or artist'
+  )
 });
 
 const SearchForm = () => {
@@ -80,13 +81,13 @@ const SearchForm = () => {
     searchInput: ''
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const { setResults } = useContext(FavoritesContext);
+
+  const { setResults, setPage, setLoading } = useContext(FavoritesContext);
 
   useEffect(() => {
     formSchema.isValid(searchTerm).then((valid) => {
       setIsButtonDisabled(!valid);
     });
-    console.log('searchTerm', searchTerm);
   }, [searchTerm]);
 
   const validateChange = (e) => {
@@ -117,18 +118,19 @@ const SearchForm = () => {
 
   const formSubmit = (e) => {
     setResults([]);
+    setPage(0);
 
     const searchString = searchTerm.searchInput.replace(' ', '%20');
 
     e.preventDefault();
+    setLoading(true)
     axiosWithSpotifyAuth()
       .get(
-        `https://api.spotify.com/v1/search?q=${searchString}&type=track%2Cartist&market=US&limit=35&offset=5`
+        `https://api.spotify.com/v1/search?q=${searchString}&type=track%2Cartist&market=US&limit=50&offset=5`
       )
       .then((res) => {
-        console.log('spotify get req', res.data.tracks.items);
         const data = res.data.tracks.items;
-        
+
         const songs = data.map((track) => {
           return {
             id: track.id,
@@ -139,8 +141,12 @@ const SearchForm = () => {
           };
         });
         setResults(songs);
+        setLoading(false)
       })
-      .catch((err) => console.error('spotify get req error', err));
+      .catch((err) => {
+        console.error('spotify get req error', err.message)
+        setLoading(false)
+    });
 
     setSearchTerm({
       searchInput: ''
@@ -150,24 +156,25 @@ const SearchForm = () => {
   return (
     <Container maxWidth={false} className={classes.container}>
       <Grid item xs={12} md={12} className={classes.formContainer}>
-        <Box className={classes.form}>
-          <TextField
-            name='searchInput'
-            id='searchInput'
-            label='Search for your favorite songs or artist'
-            fullWidth
-            onChange={inputChange}
-            value={searchTerm.searchInput}
-          />
-          <Button
-            variant='contained'
-            color='secondary'
-            disabled={isButtonDisabled}
-            type='submit'
-            onClick={formSubmit}
-          >
-            Search
-          </Button>
+        <Box>
+          <form onSubmit={formSubmit} className={classes.form}>
+            <TextField
+              name='searchInput'
+              id='searchInput'
+              label='Search for your favorite songs or artists'
+              fullWidth
+              onChange={inputChange}
+              value={searchTerm.searchInput}
+            />
+            <Button
+              variant='contained'
+              color='secondary'
+              disabled={isButtonDisabled}
+              type='submit'
+            >
+              Search
+            </Button>
+          </form>
         </Box>
         {error.searchInput.length > 0 ? <p class>{error.searchInput}</p> : null}
       </Grid>

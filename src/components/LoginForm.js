@@ -1,5 +1,4 @@
-// Login form
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +10,9 @@ import {
   Grid,
   CircularProgress
 } from '@material-ui/core';
+
 import { UserContext } from '../contexts/UserContext';
+import { LoginContext } from '../contexts/LoginContext';
 
 const formSchema = Yup.object().shape({
   username: Yup.string()
@@ -22,25 +23,24 @@ const formSchema = Yup.object().shape({
     .required('Password is a required field.')
 });
 
-const LoginForm = (props) => {
+const LoginForm = () => {
   const history = useHistory();
 
-  const [loginData, setLoginData] = useState({
-    username: '',
-    password: ''
-  });
+  const { setUserId } = useContext(UserContext);
 
-  const [errors, setErrors] = useState({
-    username: '',
-    password: ''
-  });
-
-  const [serverError, setServerError] = useState('');
-
-
-  const { setUserId, isLoading, setIsLoading} = useContext(UserContext);
-
-  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const {
+    loginData,
+    setLoginData,
+    errors,
+    setErrors,
+    serverError,
+    setServerError,
+    buttonDisabled,
+    setButtonDisabled,
+    isLoading,
+    setIsLoading,
+    formSwitch
+  } = useContext(LoginContext);
 
   useEffect(() => {
     formSchema.isValid(loginData).then((valid) => {
@@ -67,6 +67,7 @@ const LoginForm = (props) => {
 
   const handleChange = (event) => {
     event.persist();
+    setServerError('');
     setLoginData({
       ...loginData,
       [event.target.name]: event.target.value
@@ -76,7 +77,6 @@ const LoginForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     setIsLoading(true);
 
     axios
@@ -93,15 +93,7 @@ const LoginForm = (props) => {
           'access_token',
           response.data.spotify.access_token
         );
-        localStorage.setItem(
-          'userId',
-          response.data.auth.id
-        );
-
-        setLoginData({
-          username: '',
-          password: ''
-        });
+        localStorage.setItem('userId', response.data.auth.id);
 
         setServerError(null);
 
@@ -110,8 +102,15 @@ const LoginForm = (props) => {
       .catch((err) => {
         setIsLoading(false);
 
-        setServerError('Login failed. Please try again. ');
+        setServerError(
+          'Login failed. Please try again or create a new account. '
+        );
       });
+
+    setLoginData({
+      username: '',
+      password: ''
+    });
   };
 
   if (isLoading) {
@@ -184,7 +183,7 @@ const LoginForm = (props) => {
             size='large'
             style={{ backgroundColor: '#FF6584', color: 'black' }}
             fullWidth
-            onClick={props.formSwitch}
+            onClick={formSwitch}
           >
             Create An Account
           </Button>
