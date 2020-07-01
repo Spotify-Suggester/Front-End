@@ -23,6 +23,8 @@ import NextButton from '../svg/NextButton';
 import PrevButton from '../svg/PrevButton';
 import RadarChart from './RadarChart';
 
+import PlayButton from './PlayButton'
+
 import { FavoritesContext } from '../contexts/FavoritesContext';
 
 const StyledTableCell = withStyles((theme) => ({
@@ -54,8 +56,8 @@ const StyledTableRow = withStyles((theme) => ({
   }
 }))(TableRow);
 
-function createData(id, name, artist, album, image_url) {
-  return { id, name, artist, album, image_url };
+function createData(id, name, artist, album, image_url, sound_url) {
+  return { id, name, artist, album, image_url, sound_url };
 }
 
 const useStyle = makeStyles(() => ({
@@ -104,6 +106,8 @@ const useStyle = makeStyles(() => ({
     '& div:hover': {
       cursor: 'pointer'
     }
+  }, playButton: {
+    display: "flex"
   }
 }));
 
@@ -117,7 +121,7 @@ function ListComponent({ type }) {
     page,
     setPage
   } = useContext(FavoritesContext);
-
+   
   const [toShow, setToShow] = useState([]);
 
   useEffect(() => {
@@ -151,9 +155,11 @@ function ListComponent({ type }) {
       result.name,
       result.artist,
       result.album,
-      result.image_url
+      result.image_url,
+      result.sound_url
     );
   });
+
 
   return (
     <>
@@ -203,6 +209,7 @@ function ListComponent({ type }) {
                       )}
                     </StyledTableCell>
                     <StyledTableCell component='th' scope='row'>
+                    {row.sound_url !== null ? <PlayButton className={classes.playButton} url={row.sound_url} /> : null}
                       {row.name}
                     </StyledTableCell>
                     {type !== 'favorite' ? (

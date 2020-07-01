@@ -130,14 +130,16 @@ const SearchForm = () => {
       )
       .then((res) => {
         const data = res.data.tracks.items;
-
+        console.log(res.data.tracks.items);
+        
         const songs = data.map((track) => {
           return {
             id: track.id,
             name: track.name,
             artist: track.artists[0].name,
             album: track.album.name,
-            image_url: track.album.images[0].url
+            image_url: track.album.images[0].url,
+            sound_url: track.preview_url
           };
         });
         setResults(songs);
