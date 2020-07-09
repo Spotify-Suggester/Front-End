@@ -15,15 +15,17 @@ import MinusSign from '../svg/MinusSign';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Grid from '@material-ui/core/Grid';
 
 import ArrowDown from '../svg/ArrowDown';
-import Grid from '@material-ui/core/Grid';
 import ArrowUp from '../svg/ArrowUp';
 import NextButton from '../svg/NextButton';
 import PrevButton from '../svg/PrevButton';
+import PlayButton from '../svg/PlayButton';
+import PauseButton from '../svg/PauseButton'
 import RadarChart from './RadarChart';
 
-import PlayButton from './PlayButton'
+
 
 import { FavoritesContext } from '../contexts/FavoritesContext';
 
@@ -62,9 +64,11 @@ function createData(id, name, artist, album, image_url, sound_url) {
 
 const useStyle = makeStyles(() => ({
   normal: {
-    overflowY: 'hidden',
     '& .MuiTablePagination-root': {
       color: 'white !important'
+    },
+    '& .playButton svg' : {
+      marginTop: '7px'
     }
   },
   container: {
@@ -83,6 +87,9 @@ const useStyle = makeStyles(() => ({
     },
     '& .MuiTablePagination-root': {
       color: 'white'
+    },
+    '& .playButton svg' : {
+      marginTop: '7px'
     }
   },
   normalRow: {
@@ -119,7 +126,9 @@ function ListComponent({ type }) {
     results,
     suggestions,
     page,
-    setPage
+    setPage,
+    playing,
+    updateSong
   } = useContext(FavoritesContext);
    
   const [toShow, setToShow] = useState([]);
@@ -170,6 +179,7 @@ function ListComponent({ type }) {
           <TableHead>
             <TableRow>
               <StyledTableCell></StyledTableCell>
+              <StyledTableCell></StyledTableCell>
               <StyledTableCell>Song Name</StyledTableCell>
               {type !== 'favorite' ? (
                 <>
@@ -208,8 +218,19 @@ function ListComponent({ type }) {
                         </span>
                       )}
                     </StyledTableCell>
+                    <StyledTableCell>
+                      <span className="playButton" onClick={() => {updateSong(row.sound_url)}}>
+                        {
+                          row.sound_url === null ?
+                          null : 
+                          playing === row.sound_url ? 
+                            <PauseButton color='#ff6584'/> : 
+                            <PlayButton color='#ff6584'/>
+                        }
+                      </span>
+                    </StyledTableCell>
                     <StyledTableCell component='th' scope='row'>
-                    {row.sound_url !== null ? <PlayButton className={classes.playButton} url={row.sound_url} /> : null}
+                    
                       {row.name}
                     </StyledTableCell>
                     {type !== 'favorite' ? (
@@ -354,6 +375,7 @@ function Row({ row, dataList, index }) {
             <PlusSign color='#ff6584' />
           </span>
         </StyledTableCell>
+        <StyledTableCell></StyledTableCell>
         <StyledTableCell component='th' scope='row'>
           {row.name}
         </StyledTableCell>

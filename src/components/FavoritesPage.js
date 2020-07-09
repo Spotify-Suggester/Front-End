@@ -13,6 +13,8 @@ import { axiosWithUserAuth } from '../utils/axiosWithAuth';
 import { UserContext } from '../contexts/UserContext';
 import { FavoritesContext } from '../contexts/FavoritesContext';
 
+import AudioPlayer from './AudioPlayer'
+
 const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
@@ -37,6 +39,7 @@ const FavoritesPage = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [page, setPage] = useState(0);
   const [Loading, setLoading] = useState(false)
+  const [playing, setPlaying] = useState("")
 
   const { userId, setUserId } = useContext(UserContext);
 
@@ -123,6 +126,30 @@ const FavoritesPage = () => {
       .catch((err) => console.error('delete error', err.message));
   };
 
+  const updateSong = (url) => {
+    const audioElement = document.querySelector('audio')
+    if(audioElement.getAttribute('src') !== url) {
+      audioElement.pause();
+      audioElement.setAttribute("src", url)
+      audioElement.load()
+      audioElement.play()
+      setPlaying(url)
+    }else if(audioElement.getAttribute('src') === url && playing === false){
+      audioElement.play()
+      setPlaying(url)
+    } else {
+      setPlaying(false)
+      audioElement.pause()
+    }
+    audioElement.addEventListener("ended", function handler(e) {
+      setPlaying(false)
+      e.currentTarget.removeEventListener('ended', handler)
+    })
+    
+  }
+
+
+
   return (
     <FavoritesContext.Provider
       value={{
@@ -138,11 +165,14 @@ const FavoritesPage = () => {
         page,
         setPage,
         Loading,
-        setLoading
+        setLoading,
+        playing,
+        updateSong
       }}
     >
       <Container className={classes.container} maxWidth='full'>
         <NavigationBar />
+        <AudioPlayer />
         <FavoritesList />
         <Container className={classes.emptyContainer} />
         <Container className={classes.mainContainer}>
