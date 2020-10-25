@@ -19,7 +19,6 @@ Spotify Suggester allow users to create a list of favorites songs and then get s
  - [Axios](https://www.npmjs.com/package/axios)
  - [Material UI](https://material-ui.com/)
  - [Context API](https://reactjs.org/docs/context.html)
- - [Jest](https://jestjs.io/docs/en/getting-started)
  - [yup](https://www.npmjs.com/package/yup)
  - [Spotify API](https://developer.spotify.com/documentation/web-api/)
  
