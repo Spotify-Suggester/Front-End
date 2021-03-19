@@ -80,7 +80,7 @@ const LoginForm = () => {
     setIsLoading(true);
 
     axios
-      .post('https://spotify-suggester1.herokuapp.com/api/auth/login', {
+      .post('https://spotify-suggester-be.herokuapp.com/api/auth/login', {
         username: loginData.username,
         password: loginData.password
       })

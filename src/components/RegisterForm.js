@@ -82,7 +82,7 @@ const RegisterForm = () => {
     event.preventDefault();
     setIsLoading(true);
     axios
-      .post('https://spotify-suggester1.herokuapp.com/api/auth/register', {
+      .post('https://spotify-suggester-be.herokuapp.com/api/auth/register', {
         username: loginData.username,
         password: loginData.password
       })

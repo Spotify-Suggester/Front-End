@@ -70,7 +70,7 @@ const Suggestions = () => {
       min: 0,
       steps: 0.1
     },
-    
+
     {
       feature: 'liveness',
       value: 0,
@@ -122,7 +122,9 @@ const Suggestions = () => {
     }
   ]);
 
-  const { setSuggestions, favAverages, setLoading } = useContext(FavoritesContext);
+  const { setSuggestions, favAverages, setLoading } = useContext(
+    FavoritesContext
+  );
   const { userId } = useContext(UserContext);
 
   const handleChange = (index, value) => {
@@ -134,54 +136,53 @@ const Suggestions = () => {
   const updateSuggestions = () => {
     let mood = {};
     features.forEach((item) => (mood[item.feature] = item.value));
-    setLoading(true)
-    setSuggestions([])
+    setLoading(true);
+    setSuggestions([]);
     axiosWithUserAuth()
       .post(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,
+        `https://spotify-suggester-be.herokuapp.com/api/users/${userId}/recommend`,
         mood
       )
       .then((res) => {
         setSuggestions(res.data.recommended_songs);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((err) => {
-        console.error('get err', err.message)
-        setLoading(false)
-    });
+        console.error('get err', err.message);
+        setLoading(false);
+      });
   };
 
- 
   return (
     <>
-    <Container maxWidth={false} className={classes.container}>
-      <Grid item xs={12} md={12} className={classes.formContainer}>
-        <Paper className={classes.paper} square>
-          {features.map((features, index) => (
-            <Box className={classes.box}>
-              <Typography id='discrete-slider' gutterBottom>
-                {features.feature}
-              </Typography>
-              <Slider
-                defaultValue={favAverages[index].value.toFixed(2)}
-                aria-labelledby='discrete-slider'
-                valueLabelDisplay='auto'
-                step={features.steps}
-                marks
-                min={features.min}
-                max={features.max}
-                onChangeCommitted={(e, val) => {
-                  handleChange(index, val);
-                }}
-              />
-            </Box>
-          ))}
-          <Button size='large' onClick={updateSuggestions}>
-            Update
-          </Button>
-        </Paper>
-      </Grid>
-    </Container>
+      <Container maxWidth={false} className={classes.container}>
+        <Grid item xs={12} md={12} className={classes.formContainer}>
+          <Paper className={classes.paper} square>
+            {features.map((features, index) => (
+              <Box className={classes.box}>
+                <Typography id='discrete-slider' gutterBottom>
+                  {features.feature}
+                </Typography>
+                <Slider
+                  defaultValue={favAverages[index].value.toFixed(2)}
+                  aria-labelledby='discrete-slider'
+                  valueLabelDisplay='auto'
+                  step={features.steps}
+                  marks
+                  min={features.min}
+                  max={features.max}
+                  onChangeCommitted={(e, val) => {
+                    handleChange(index, val);
+                  }}
+                />
+              </Box>
+            ))}
+            <Button size='large' onClick={updateSuggestions}>
+              Update
+            </Button>
+          </Paper>
+        </Grid>
+      </Container>
     </>
   );
 };

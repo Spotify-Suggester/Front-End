@@ -43,75 +43,86 @@ const useStyles = makeStyles(() => ({
 const FavoritesList = ({ setIsShowing }) => {
   const classes = useStyles();
 
-  const { userId, setUserId  } = useContext(UserContext);
-  const { favorites, setSuggestions, favAverages, setFavorites, setLoading } = useContext(FavoritesContext);
-  const [isLoading, setIsLoading] = useState(false)
+  const { userId, setUserId } = useContext(UserContext);
+  const {
+    favorites,
+    setSuggestions,
+    favAverages,
+    setFavorites,
+    setLoading
+  } = useContext(FavoritesContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!userId) {
       setUserId(localStorage.getItem('userId'));
     }
-    setIsLoading(true)
+    setIsLoading(true);
     axiosWithUserAuth()
       .get(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/favorites`
+        `https://spotify-suggester-be.herokuapp.com/api/users/${userId}/favorites`
       )
       .then((res) => {
         setFavorites(res.data.favorite_songs);
-        setIsLoading(false)
+        setIsLoading(false);
       })
       .catch((err) => {
-        setIsLoading(false)
-        console.error('err', err.message)
+        setIsLoading(false);
+        console.error('err', err.message);
       });
   }, [userId]);
 
   const getSuggestions = () => {
-    let valuesToSend = {}
+    let valuesToSend = {};
     favAverages.forEach((item) => (valuesToSend[item.feature] = item.value));
-    setLoading(true)
-    setSuggestions([])
+    setLoading(true);
+    setSuggestions([]);
     axiosWithUserAuth()
       .post(
-        `https://spotify-suggester1.herokuapp.com/api/users/${userId}/recommend`,valuesToSend
+        `https://spotify-suggester-be.herokuapp.com/api/users/${userId}/recommend`,
+        valuesToSend
       )
       .then((res) => {
         setSuggestions(res.data.recommended_songs);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((err) => {
-        console.error('get err', err.message)
-        setLoading(false)
-    });
+        console.error('get err', err.message);
+        setLoading(false);
+      });
   };
 
   return (
     <Container className={classes.container}>
       <h2 className={classes.header}>Favorite Songs</h2>
       <ListComponent type='favorite' />
-      { isLoading ? <CircularProgress
-        style={{
-          position: 'absolute',
-          left: '45%',
-          marginTop: '50px',
-          color: '#FF6584'
-        }}
-      /> : null}
-      
-      <Link to="/favorites/suggestions"><Button
-        disabled={favorites.length < 5 ? true : false}
-        variant='contained'
-        size='large'
-        onClick={() => {
-          getSuggestions();
-        }}
-      >
-        {favorites.length < 5
-          ? `Please add ${5 - favorites.length} more ${
-              5 - favorites.length === 1 ? 'Favorite' : 'Favorites'
-            }`
-          : 'Suggest Songs'}
-      </Button></Link>
+      {isLoading ? (
+        <CircularProgress
+          style={{
+            position: 'absolute',
+            left: '45%',
+            marginTop: '50px',
+            color: '#FF6584'
+          }}
+        />
+      ) : null}
+
+      <Link to='/favorites/suggestions'>
+        <Button
+          disabled={favorites.length < 5 ? true : false}
+          variant='contained'
+          size='large'
+          onClick={() => {
+            getSuggestions();
+          }}
+        >
+          {favorites.length < 5
+            ? `Please add ${5 - favorites.length} more ${
+                5 - favorites.length === 1 ? 'Favorite' : 'Favorites'
+              }`
+            : 'Suggest Songs'}
+        </Button>
+      </Link>
     </Container>
   );
 };
