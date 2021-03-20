@@ -27,4 +27,4 @@ Spotify Suggester allow users to create a list of favorites songs and then get s
 - Clone this Repository
 - Install all project dependencies with `npm install`
 - Start the development server with `npm start`
-- This Projects uses [https://spotify-suggester1.herokuapp.com](https://spotify-suggester1.herokuapp.com) as Back End Server
+- This Projects uses [https://spotify-suggester-be.herokuapp.com](https://spotify-suggester-be.herokuapp.com) as Back End Server
