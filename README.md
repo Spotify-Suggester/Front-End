@@ -1,6 +1,6 @@
 # Spotify-Suggester-Front-End
 
-Spotify Suggester allow users to create a list of favorites songs and then get suggestions for new songs based on their favorite list . [Live Version](https://spotify-suggester-fe.heroku.app)
+Spotify Suggester allow users to create a list of favorites songs and then get suggestions for new songs based on their favorite list . [Live Version](https://spotify-suggester-fe.herokuapp.com)
 ![alt text](https://github.com/BkAngel201/portfolio-website/raw/master/images/pic04-3.jpg 'Spotify Suggester App')
 
 ## How it works
